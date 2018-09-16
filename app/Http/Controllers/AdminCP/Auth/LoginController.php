@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\AdminCP\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -17,6 +17,6 @@ class LoginController extends Controller
 
   public function showLoginForm()
   {
-    return view('front.auth.login');
+    return view('back.auth.login');
   }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\AdminCP\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
@@ -16,6 +16,6 @@ class ForgotPasswordController extends Controller
 
   public function showLinkRequestForm()
   {
-    return view('front.auth.passwords.email');
+    return view('back.auth.passwords.email');
   }
 }
