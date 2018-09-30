@@ -9,16 +9,17 @@ class AdminController extends Controller
 {
   public function dashboard()
   {
-  	$template['title'] = 'Test title';
-  	$template['title-breadcrumb'] = 'Test title';
-  	$template['breadcrumbs'] = [
-  		[
-  			'name' => 'Library',
-  			'link' => 'link',
-  			'active' => true
-  		],
-  	];
+    $template['title'] = 'Test title';
+    $template['title-breadcrumb'] = 'Test title';
+    $template['form-datatable'] = true;
+    $template['breadcrumbs'] = [
+      [
+        'name' => 'Library',
+        'link' => 'link',
+        'active' => true
+      ],
+    ];
 
-  	return view('back.index', compact('template'));
+    return view('back.index', compact('template'));
   }
 }

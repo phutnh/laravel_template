@@ -50,5 +50,11 @@
     <script src="{{ asset(config('setting.admin.path_js') . 'jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset(config('setting.admin.path_js') . 'dataTables.bootstrap.min.js') }}"></script>
     <script src="{{ asset(config('setting.admin.path_js') . 'custom.js') }}"></script>
+    @yield('scripts')
+    @isset($template['form-datatable'])
+    <script type="text/javascript">
+        $('#table-data-content').DataTable(optionsDataTable);
+    </script>
+    @endisset
   </body>
 </html>
