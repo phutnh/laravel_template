@@ -23,7 +23,7 @@
             "App\\": "app/"
         },
 		"files": [
-			"app/Fucntions/Helper.php"
+			"app/Functions/Helper.php"
 		]
     },
     "autoload-dev": {
