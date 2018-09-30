@@ -164,5 +164,16 @@ $(function() {
             $("#main-wrapper").attr("data-sidebartype", "full");
         }
     });
+
+    $(".select2").select2();
+
+    $('#datepicker-autoclose').datepicker({
+        autoclose: true,
+        todayHighlight: true
+    });
+
+    $('#table-data-content').DataTable();
+
+
     
 });

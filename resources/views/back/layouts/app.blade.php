@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ config('app.locale') }}" dir="ltr">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,10 +8,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('css/admincp/icons/favicon.png') }}">
-    <title>Matrix Template - The Ultimate Multipurpose admin template</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset(config('setting.admin.path_css') . '/icons/favicon.png') }}">
+    <title>{{ $template['title'] }} - {{ config('app.name') }}</title>
     <!-- Custom CSS -->
-    <link href="{{ asset('css/admincp/style.min.css') }}" rel="stylesheet">
+    <link href="{{ asset(config('setting.admin.path_css') . 'select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset(config('setting.admin.path_css') . 'bootstrap-datepicker.min.css') }}" rel="stylesheet">
+    <link href="{{ asset(config('setting.admin.path_css') . 'dataTables.bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset(config('setting.admin.path_css') . 'style.min.css') }}" rel="stylesheet">
     @yield('styles')
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -30,19 +33,22 @@
     <div id="main-wrapper">
 			@include('back.layouts.header')
       <div class="page-wrapper">
-			@yield('content')
-       <footer class="footer text-center">
-          All Rights Reserved. Copyright {{ date('Y') }}
-        </footer>
+	    	@include('back.layouts.breadcrumb')
+				@yield('content')
+	      <footer class="footer text-center">
+	        All Rights Reserved. Copyright {{ date('Y') }}
+	      </footer>
       </div>
     </div>
-    <script src="{{ asset('js/admincp/jquery.min.js') }}"></script>
-    <script src="{{ asset('js/admincp/popper.min.js') }}"></script>
-    <script src="{{ asset('js/admincp/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/admincp/perfect-scrollbar.jquery.min.js') }}"></script>
-    <script src="{{ asset('js/admincp/sparkline.js') }}"></script>
-    <script src="{{ asset('js/admincp/waves.js') }}"></script>
-    <script src="{{ asset('js/admincp/sidebarmenu.j') }}s"></script>
-    <script src="{{ asset('js/admincp/custom.min.js') }}"></script>
+    <script src="{{ asset(config('setting.admin.path_js') . 'jquery.min.js') }}"></script>
+    <script src="{{ asset(config('setting.admin.path_js') . 'popper.min.js') }}"></script>
+    <script src="{{ asset(config('setting.admin.path_js') . 'bootstrap.min.js') }}"></script>
+    <script src="{{ asset(config('setting.admin.path_js') . 'perfect-scrollbar.jquery.min.js') }}"></script>
+    <script src="{{ asset(config('setting.admin.path_js') . 'waves.js') }}"></script>
+    <script src="{{ asset(config('setting.admin.path_js') . 'bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset(config('setting.admin.path_js') . 'select2.min.js') }}"></script>
+    <script src="{{ asset(config('setting.admin.path_js') . 'jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset(config('setting.admin.path_js') . 'dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset(config('setting.admin.path_js') . 'custom.js') }}"></script>
   </body>
 </html>
