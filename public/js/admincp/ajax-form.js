@@ -1,18 +1,20 @@
 $(document).ready(function() {
 
-  var optionsAdd = {
+  var optionsCreate = {
     complete: function(response) {
       if (response.status == 200) {
-        for (instance in CKEDITOR.instances) {
-          CKEDITOR.instances[instance].setData('');
-        }
+        // for (instance in CKEDITOR.instances) {
+        //   CKEDITOR.instances[instance].setData('');
+        // }
 
-        $("#resultMess").parents(".alert-ajax").css({
+        $("#ajax-messases").css({
           "display": "block"
         });
-        $("#resultMess").html("Thêm mới thành công");
+
+        $("#ajax-messases").find('.messases-text').html("Thêm mới thành công");
+
         window.setTimeout(function() {
-          $("#resultMess").parents(".alert-ajax").css({
+          $("#ajax-messases").css({
             "display": "none"
           });
         }, 3000);
@@ -26,70 +28,62 @@ $(document).ready(function() {
         showFormError(response.responseJSON);
       }
 
-      $("#loadingAjaxForm").css({
-        "display": "none"
-      });
     },
     beforeSerialize: function($form, options) {
-      for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-      }
+      // for (instance in CKEDITOR.instances) {
+      //   CKEDITOR.instances[instance].updateElement();
+      // }
     },
     beforeSubmit: function(arr, $form, options) {
-      $("#loadingAjaxForm").css({
-        "display": "block"
-      });
     },
+
     resetForm: true
   };
 
 
-  var optionsEdit = {
+  var optionsUpdate = {
     complete: function(response) {
       if (response.status == 200) {
         $('body').animate({
           scrollTop: 0
         }, 500);
-
-        $("#resultMess").parents(".alert-ajax").css({
+        $("#ajax-messases").css({
           "display": "block"
         });
-        $("#resultMess").html("Chỉnh sửa thành công");
+
+        $("#ajax-messases").find('.messases-text').html("Chỉnh sửa thông tin thành công");
+
         window.setTimeout(function() {
-          $("#resultMess").parents(".alert-ajax").css({
+          $("#ajax-messases").css({
             "display": "none"
           });
         }, 3000);
+
       } else {
         console.clear();
         showFormError(response.responseJSON);
       }
-
-      $("#loadingAjaxForm").css({
-        "display": "none"
-      });
     },
     beforeSerialize: function($form, options) {
-      for (instance in CKEDITOR.instances) {
-        CKEDITOR.instances[instance].updateElement();
-      }
+      // for (instance in CKEDITOR.instances) {
+      //   CKEDITOR.instances[instance].updateElement();
+      // }
     },
     beforeSubmit: function(arr, $form, options) {
-      $("#loadingAjaxForm").css({
-        "display": "block"
-      });
     }
   };
 
-  $("#formAddData").ajaxForm(optionsAdd);
-  $("#formEditData").ajaxForm(optionsEdit);
+  $("#form-create").ajaxForm(optionsCreate);
+  $("#form-update").ajaxForm(optionsUpdate);
 
 
   function showFormError(responseText) {
     var errorData = '';
 
-    $.each(responseText, function(data, v) {
+    $.each(responseText, function(k, v) {
       errorData += '- ' + v + '<br>';
+      $('#'+k).addClass('is-invalid');
+      console.log(k);
     });
 
     $.confirm({
@@ -107,7 +101,7 @@ $(document).ready(function() {
 
   function getDataMessages(responseJSON) {
     var msgData = '';
-    $.each(responseJSON, function(data, v) {
+    $.each(responseJSON, function(k, v) {
       msgData += '- ' + v + '<br>';
     });
 

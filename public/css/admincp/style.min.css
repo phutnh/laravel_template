@@ -16075,3 +16075,8 @@ label {
     display: block!important
   }
 }
+
+/*Customize css*/
+#ajax-messases {
+  display: none;
+}

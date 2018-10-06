@@ -3,17 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset(config('setting.admin.path_css') . '/icons/favicon.png') }}">
     <title>{{ $template['title'] }} - {{ config('app.name') }}</title>
-    <!-- Custom CSS -->
     <link href="{{ asset(config('setting.admin.path_css') . 'select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset(config('setting.admin.path_css') . 'bootstrap-datepicker.min.css') }}" rel="stylesheet">
     <link href="{{ asset(config('setting.admin.path_css') . 'dataTables.bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset(config('setting.admin.path_css') . 'jquery-confirm.min.css') }}" rel="stylesheet">
     <link href="{{ asset(config('setting.admin.path_css') . 'style.min.css') }}" rel="stylesheet">
     @yield('styles')
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -49,6 +47,9 @@
     <script src="{{ asset(config('setting.admin.path_js') . 'select2.min.js') }}"></script>
     <script src="{{ asset(config('setting.admin.path_js') . 'jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset(config('setting.admin.path_js') . 'dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset(config('setting.admin.path_js') . 'jquery.form.min.js') }}"></script>
+    <script src="{{ asset(config('setting.admin.path_js') . 'jquery-confirm.min.js') }}"></script>
+    <script src="{{ asset(config('setting.admin.path_js') . 'ajax-form.js') }}"></script>
     <script src="{{ asset(config('setting.admin.path_js') . 'custom.js') }}"></script>
     @yield('scripts')
     @isset($template['form-datatable'])

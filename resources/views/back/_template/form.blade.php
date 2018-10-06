@@ -9,13 +9,15 @@
   <div class="row">
     <div class="col-md-6">
       <div class="card">
-        <form class="form-horizontal">
+        @include('back.partials.ajax_form_messages')
+        <form class="form-horizontal" action="{{ route('admin.sample.post') }}" method="post" id="form-create">
+          {{ csrf_field() }}
           <div class="card-body">
             <h4 class="card-title">Personal Info</h4>
             <div class="form-group row">
-              <label for="fname" class="col-sm-3 text-right control-label col-form-label">First Name</label>
+              <label class="col-sm-3 text-right control-label col-form-label">Name</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" id="fname" placeholder="First Name Here">
+                <input type="text" class="form-control" name="name" id="name" placeholder="Name">
               </div>
             </div>
             <div class="form-group row">
@@ -51,7 +53,7 @@
           </div>
           <div class="border-top">
             <div class="card-body">
-              <button type="button" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
             </div>
           </div>
         </form>
