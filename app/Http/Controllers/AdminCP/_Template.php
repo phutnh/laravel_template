@@ -27,8 +27,7 @@ class Template extends Controller
   			'active' => true
   		],
   	];
-
-    return Datatables::of($this->repository->query())->make();
+    
   	return view('back.index', compact('template'));
   }
 }
