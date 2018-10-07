@@ -16,6 +16,19 @@ class ForgotPasswordController extends Controller
 
   public function showLinkRequestForm()
   {
-    return view('front.auth.passwords.email');
+    return view('auth.passwords.email');
+  }
+  
+    
+  protected function validateEmail($request)
+  {
+    $this->validate($request,
+    [
+      'email' => 'required|email'
+    ],
+    [
+     'email.required' => 'Vui lòng nhập địa chỉ email',
+     'email.email' => 'Vui lòng nhập địa chỉ email',
+    ]);
   }
 }

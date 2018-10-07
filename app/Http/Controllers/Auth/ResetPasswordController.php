@@ -15,11 +15,15 @@ class ResetPasswordController extends Controller
   {
     $this->middleware('guest');
   }
-
-  public function showResetForm(Request $request, $token = null)
+  
+  protected function validationErrorMessages()
   {
-    return view('front.auth.passwords.reset')->with(
-      ['token' => $token, 'email' => $request->email]
-    );
+    return [
+      'email.required' => 'Vui lòng nhập email',
+      'email.email' => 'Vui lòng nhập email',
+      'password.required' => 'Vui lòng nhập mật khẩu',
+      'password.confirmed' => 'Mật khẩu nhập lại không khớp',
+      'password.min' => 'Mật khẩu phải từ 6 ký tự'
+    ];
   }
 }

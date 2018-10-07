@@ -12,6 +12,7 @@ class AdminController extends Controller
   {
     $template['title'] = 'Test title';
     $template['title-breadcrumb'] = 'Test title';
+    $template['form-datatable'] = true; // Hiển thị table của dữ liệu sử dụng datatable
     $template['breadcrumbs'] = [
       [
         'name' => 'Library',
@@ -19,8 +20,8 @@ class AdminController extends Controller
         'active' => true
       ],
     ];
-
-    return view('back._template.form', compact('template'));
+    return view('back.index', compact('template')); // Giao diện sample table
+    // return view('back._template.form', compact('template')); // Giao diện samle form
   }
 
   // Sample function post
