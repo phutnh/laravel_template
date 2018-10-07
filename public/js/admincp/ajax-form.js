@@ -4,9 +4,6 @@ $(document).ready(function() {
   var optionsCreate = {
     complete: function(response) {
       if (response.status == 200) {
-        // for (instance in CKEDITOR.instances) {
-        //   CKEDITOR.instances[instance].setData('');
-        // }
 
         $("#ajax-messases").css({
           "display": "block"
@@ -33,9 +30,6 @@ $(document).ready(function() {
 
     },
     beforeSerialize: function($form, options) {
-      // for (instance in CKEDITOR.instances) {
-      //   CKEDITOR.instances[instance].updateElement();
-      // }
     },
     beforeSubmit: function(arr, $form, options) {
     },
@@ -70,9 +64,6 @@ $(document).ready(function() {
       }
     },
     beforeSerialize: function($form, options) {
-      // for (instance in CKEDITOR.instances) {
-      //   CKEDITOR.instances[instance].updateElement();
-      // }
     },
     beforeSubmit: function(arr, $form, options) {
     }
@@ -83,6 +74,7 @@ $(document).ready(function() {
 
 
   function showFormError(responseText) {
+    resetFormError();
     dataFieldError = responseText;
     $.each(responseText, function(k, v) {
       id_error = $('#'+k);

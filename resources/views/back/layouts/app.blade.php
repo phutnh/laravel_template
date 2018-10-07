@@ -11,7 +11,6 @@
     <link href="{{ asset(config('setting.admin.path_css') . 'select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset(config('setting.admin.path_css') . 'bootstrap-datepicker.min.css') }}" rel="stylesheet">
     <link href="{{ asset(config('setting.admin.path_css') . 'dataTables.bootstrap.css') }}" rel="stylesheet">
-    <link href="{{ asset(config('setting.admin.path_css') . 'jquery-confirm.min.css') }}" rel="stylesheet">
     <link href="{{ asset(config('setting.admin.path_css') . 'style.min.css') }}" rel="stylesheet">
     @yield('styles')
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -48,7 +47,6 @@
     <script src="{{ asset(config('setting.admin.path_js') . 'jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset(config('setting.admin.path_js') . 'dataTables.bootstrap.min.js') }}"></script>
     <script src="{{ asset(config('setting.admin.path_js') . 'jquery.form.min.js') }}"></script>
-    <script src="{{ asset(config('setting.admin.path_js') . 'jquery-confirm.min.js') }}"></script>
     <script src="{{ asset(config('setting.admin.path_js') . 'ajax-form.js') }}"></script>
     <script src="{{ asset(config('setting.admin.path_js') . 'custom.js') }}"></script>
     @yield('scripts')

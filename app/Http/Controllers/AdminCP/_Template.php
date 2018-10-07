@@ -31,3 +31,30 @@ class Template extends Controller
   	return view('back.index', compact('template'));
   }
 }
+
+/*
+class FunctoionController extends Controller
+{
+  public function index()
+  {
+    $template['title'] = 'Test title';
+    $template['title-breadcrumb'] = 'Test title';
+    $template['form-datatable'] = true // Hiển thị table của dữ liệu sử dụng datatable
+    $template['breadcrumbs'] = [
+      [
+        'name' => 'Library',
+        'link' => 'link',
+        'active' => true
+      ],
+    ];
+
+    return view('back._template.form', compact('template'));
+  }
+
+  // Sample function post
+  public function postSample(DemoRequest $request)
+  {
+    # code...
+  }
+}
+*/
