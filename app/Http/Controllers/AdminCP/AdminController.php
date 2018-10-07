@@ -10,18 +10,16 @@ class AdminController extends Controller
 {
   public function dashboard()
   {
-    $template['title'] = 'Test title';
-    $template['title-breadcrumb'] = 'Test title';
-    $template['form-datatable'] = true; // Hiển thị table của dữ liệu sử dụng datatable
+    $template['title'] = 'Quản lý';
+    $template['title-breadcrumb'] = 'Quản lý';
     $template['breadcrumbs'] = [
       [
-        'name' => 'Library',
-        'link' => 'link',
+        'name' => 'Quản lý',
+        'link' => '',
         'active' => true
       ],
     ];
-    return view('back.index', compact('template')); // Giao diện sample table
-    // return view('back._template.form', compact('template')); // Giao diện samle form
+    return view('back.index', compact('template'));
   }
 
   // Sample function post

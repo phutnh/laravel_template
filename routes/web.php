@@ -6,7 +6,7 @@ Auth::routes();
 
 
 // Admin route
-Route::group(['prefix' => 'admincp', 'namespace' => 'AdminCP'], function() {
+Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'auth'], function() {
   Route::get('/', 'AdminController@dashboard')->name('admin.dashboard');
 
   //Route Sample post

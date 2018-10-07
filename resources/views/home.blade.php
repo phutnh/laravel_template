@@ -1,5 +1,5 @@
 @extends('front.layouts.app')
 
 @section('content')
-	Đây là home
+	<a href="{{ route('login') }}">Đăng nhập</a>
 @endsection
