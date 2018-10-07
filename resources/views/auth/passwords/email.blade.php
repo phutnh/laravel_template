@@ -40,18 +40,14 @@
                         <form class="col-12" method="post" action="{{ route('password.email') }}">
                             <!-- email -->
                             {{ csrf_field() }}
+                            @include('partials.validation_errors')
+                            @include('partials.messages')
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-danger text-white"><i class="ti-email"></i></span>
                                 </div>
                                 <input type="text" name="email" class="form-control form-control-lg" placeholder="Địa chỉ email" focus>
                             </div>
-                            @if ($errors->has('email'))
-                            <div style="color: red">
-                                <strong>{{ $errors->first('email') }}</strong>
-                            </div>
-                            @endif
-                            <!-- pwd -->
                             <div class="row m-t-20 p-t-20 border-top border-secondary">
                                 <div class="col-12">
                                     <a class="btn btn-success" href="{{ route('login') }}" id="to-login" name="action">Trở về</a>
