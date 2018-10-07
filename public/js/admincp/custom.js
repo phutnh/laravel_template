@@ -172,6 +172,8 @@ $(function() {
         todayHighlight: true
     });
 
+    $("input").attr("autocomplete", "off");
+
 });
 
 languageDatatable = {

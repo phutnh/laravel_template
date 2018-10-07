@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  var dataFieldError = '';
 
   var optionsCreate = {
     complete: function(response) {
@@ -22,6 +23,8 @@ $(document).ready(function() {
         $('body').animate({
           scrollTop: 0
         }, 500);
+
+        resetFormError();
 
       } else {
         console.clear();
@@ -59,6 +62,8 @@ $(document).ready(function() {
           });
         }, 3000);
 
+        resetFormError();
+
       } else {
         console.clear();
         showFormError(response.responseJSON);
@@ -78,34 +83,24 @@ $(document).ready(function() {
 
 
   function showFormError(responseText) {
-    var errorData = '';
-
+    dataFieldError = responseText;
     $.each(responseText, function(k, v) {
-      errorData += '- ' + v + '<br>';
-      $('#'+k).addClass('is-invalid');
-      console.log(k);
-    });
-
-    $.confirm({
-      title: 'Lỗi nhập dữ liệu',
-      content: errorData,
-      type: "red",
-      typeAnimated: true,
-      useBootstrap: true,
-      icon: 'icon-warning-sign',
-      buttons: {
-        'Đồng ý': function() {},
-      }
+      id_error = $('#'+k);
+      id_error.addClass('is-invalid');
+      html_feedback = `<div class="invalid-feedback mc-invalid-feedback">${v}</div>`;
+      id_error.parent('.mc-form-input').append(html_feedback);
     });
   }
 
-  function getDataMessages(responseJSON) {
-    var msgData = '';
-    $.each(responseJSON, function(k, v) {
-      msgData += '- ' + v + '<br>';
+  function resetFormError() {
+    console.log(dataFieldError);
+    $.each(dataFieldError, function(k, v) {
+      id_error = $('#'+k);
+      id_error.removeClass('is-invalid');
+      id_error.parent('.mc-form-input').find('.mc-invalid-feedback').html('');
     });
 
-    return msgData;
+    dataFieldError = '';
   }
 
 });
