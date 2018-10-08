@@ -103,7 +103,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
   public function create($attributes)
   {
-    return $this->model->create($attributes);
+    return $this->model->insert($attributes);
   }
 
   public function update($attributes, $id)
@@ -115,8 +115,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
       return false;
     }
 
-    $model->fill($attributes);
-    $model->save();
+    $model->update($attributes);
     return $model;
   }
 

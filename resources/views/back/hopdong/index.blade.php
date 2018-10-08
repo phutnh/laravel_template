@@ -4,13 +4,16 @@
 @section('scripts')
   <script type="text/javascript">
     optionsDataTable = {
-      "ajax": "{{ route('api.get_user') }}",
+      "ajax": "{{ route('api.hopdong.all') }}",
       "language": languageDatatable,
       "processing": true,
       "serverSide": true,
       "columns": [
-        { "data": "name" },
-        { "data": "email" },
+        { "data": "sohopdong" },
+        { "data": "tenhopdong" },
+        { "data": "tenkhachhang" },
+        { "data": "giatri" },
+        { "data": "trangthai" }
       ]
     };
   </script>
@@ -22,12 +25,20 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Basic Datatable</h5>
+          <div class="block-header">
+            <h5 class="card-title">Danh sách hợp đồng</h5>
+            <div class="block-tool">
+              <a class="btn btn-success" href="{{ route('admin.hopdong.create') }}">Tạo mới</a>
+            </div>
+          </div>
           <table id="table-data-content" class="table table-striped table-bordered">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>email</th>
+                <th>Số hợp đồng</th>
+                <th>Tên hợp đồng</th>
+                <th>Khách hàng</th>
+                <th>Giá trị</th>
+                <th>Trạng thái</th>
               </tr>
             </thead>
           </table>

@@ -16084,3 +16084,16 @@ label {
 .mc-no-margin-bottom {
   margin-bottom: 0;
 }
+
+.block-header {
+  display: block;
+  position: relative;
+  clear: both;
+  height: 50px;
+}
+
+.block-tool {
+  position: absolute;
+  right: 0;
+  top: 0px;
+}

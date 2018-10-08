@@ -50,3 +50,11 @@ if(!function_exists('redirectBackSuccessData'))
 		return redirect()->back()->with('success', $messages);
 	}
 }
+
+if(!function_exists('getNhanVienID'))
+{
+	function getNhanVienID()
+	{
+		return Auth::id();
+	}
+}
