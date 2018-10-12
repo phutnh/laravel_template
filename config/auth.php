@@ -67,7 +67,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Nhanvien::class,
+            'model' => App\Models\NhanVien::class,
         ],
 
         // 'users' => [

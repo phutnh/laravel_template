@@ -17,14 +17,14 @@ $(document).ready(function() {
           });
         }, 3000);
 
-        $('body').animate({
+        $('html, body').animate({
           scrollTop: 0
-        }, 500);
+        }, 1000);
 
         resetFormError();
 
       } else {
-        console.clear();
+        // console.clear();
         showFormError(response.responseJSON);
       }
 
@@ -32,9 +32,13 @@ $(document).ready(function() {
     beforeSerialize: function($form, options) {
     },
     beforeSubmit: function(arr, $form, options) {
+      $('#send-process').width('0%');
     },
-
-    resetForm: true
+    resetForm: true,
+    uploadProgress: function(event, position, total, percentComplete) {
+      percentVal = percentComplete + '%';
+      $('#send-process').width(percentVal)
+    },
   };
 
 
@@ -43,7 +47,7 @@ $(document).ready(function() {
       if (response.status == 200) {
         $('body').animate({
           scrollTop: 0
-        }, 500);
+        }, 1000);
         $("#ajax-messases").css({
           "display": "block"
         });
@@ -56,17 +60,25 @@ $(document).ready(function() {
           });
         }, 3000);
 
+        $('html, body').animate({
+          scrollTop: 0
+        }, 1000);
+
         resetFormError();
 
       } else {
-        console.clear();
         showFormError(response.responseJSON);
       }
     },
     beforeSerialize: function($form, options) {
     },
     beforeSubmit: function(arr, $form, options) {
-    }
+      $('#send-process').width('0%')
+    },
+    uploadProgress: function(event, position, total, percentComplete) {
+      percentVal = percentComplete + '%';
+      $('#send-process').width(percentVal)
+    },
   };
 
   $("#form-create").ajaxForm(optionsCreate);
@@ -77,22 +89,25 @@ $(document).ready(function() {
     resetFormError();
     dataFieldError = responseText;
     $.each(responseText, function(k, v) {
+      k = k.replace('.0','');
       id_error = $('#'+k);
       id_error.addClass('is-invalid');
       html_feedback = `<div class="invalid-feedback mc-invalid-feedback">${v}</div>`;
-      id_error.parent('.mc-form-input').append(html_feedback);
+      id_error.closest('.mc-form-input').append(html_feedback);
     });
   }
 
   function resetFormError() {
-    console.log(dataFieldError);
     $.each(dataFieldError, function(k, v) {
+      k = k.replace('.0','');
       id_error = $('#'+k);
       id_error.removeClass('is-invalid');
-      id_error.parent('.mc-form-input').find('.mc-invalid-feedback').html('');
+      id_error.closest('.mc-form-input').find('.mc-invalid-feedback').html('');
     });
 
     dataFieldError = '';
+
+    $('#send-process').width('0%');
   }
 
 });

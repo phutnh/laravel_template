@@ -6,12 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset(config('setting.admin.path_css') . '/icons/favicon.png') }}">
     <title>{{ $template['title'] }} - {{ config('app.name') }}</title>
     <link href="{{ asset(config('setting.admin.path_css') . 'select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset(config('setting.admin.path_css') . 'bootstrap-datepicker.min.css') }}" rel="stylesheet">
     <link href="{{ asset(config('setting.admin.path_css') . 'dataTables.bootstrap.css') }}" rel="stylesheet">
     <link href="{{ asset(config('setting.admin.path_css') . 'style.min.css') }}" rel="stylesheet">
+    <!-- Add start ThangTGM 11/10/2018 -->
+    <link href="{{ asset(config('setting.admin.path_css') . 'custom.css') }}" rel="stylesheet">
+    <!-- Add end -->
     @yield('styles')
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
