@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\ResetPassword;
 use App\Models\HopDong;
+use DB;
 
 class NhanVien extends Authenticatable
 {
@@ -36,23 +37,23 @@ class NhanVien extends Authenticatable
     return $this->find($this->parent_id);
   }
 
-  public function ancestors()
-  {
-    $ancestors = $this->where('id', '=', $this->parent_id)->get();
-
-    while ($ancestors->last() && $ancestors->last()->parent_id != null)
-    {
-        $parent = $this->where('id', '=', $ancestors->last()->parent_id)->get();
-        $ancestors = $ancestors->merge($parent);
-    }
-
-    return $ancestors;
-  }
-
   public function getAncestorsAttribute()
   {
-      return $this->ancestors();
-      // or like this, if you want it the other way around
-      // return $this->ancestors()->reverse();
+    $query = 'SELECT T2.id,
+      T2.tennhanvien
+      FROM
+        ( SELECT @r AS _id,
+           (SELECT @r := parent_id
+            FROM nhanvien
+            WHERE id = _id) AS parent_id, @l := @l + 1 AS lvl
+         FROM
+           (SELECT @r := '.$this->id.', @l := 0) vars,
+              nhanvien m
+         WHERE @r <> 0) T1
+      JOIN nhanvien T2 ON T1._id = T2.id
+      ORDER BY T1.lvl ASC';
+    $ancestors = collect(DB::select($query));
+    $ancestors->splice(0,1);
+    return $ancestors;
   }
 }

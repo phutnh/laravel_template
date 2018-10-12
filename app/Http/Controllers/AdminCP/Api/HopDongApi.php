@@ -63,7 +63,7 @@ class HopDongApi extends Controller
             $message = 'Hợp đồng <b>'.$hopdong->sohopdong.'</b> đã được duyệt nên không thể xóa';
             break;
           } else {
-            $hopdong->delete();
+            $hopdong->remove();
             $message = 'Xóa dữ liệu thành công';
           }
         }
@@ -121,8 +121,6 @@ class HopDongApi extends Controller
   private function approved($hopdong)
   {
     $nhanvien = $hopdong->nhanvien;
-    // dd($nhanvien->id);
     $ancestors = $nhanvien->ancestors;
-    dd($ancestors->toArray());
   }
 }

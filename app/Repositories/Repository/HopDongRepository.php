@@ -18,6 +18,8 @@ class HopDongRepository extends BaseRepository
       $hopdong->where('id', $request->notify_id);
     if (getQuyenNhanVien() != 1)
       $hopdong->where('nhanvien_id', getNhanVienID());
+    
+    $hopdong->where('deleted', 0);
     // if (getQuyenNhanVien() == '1') {
     //   $hopdong->where('trangthai', '<>', 'Chưa gửi');
     //   $hopdong->orWhere('nhanvien_id', getNhanVienID());

@@ -16,6 +16,12 @@ class HopDong extends Model
   	return $this->belongsTo(NhanVien::class);
   }
 
+  public function remove()
+  {
+    $this->deleted = 1;
+    $this->save();
+  }
+
   public function trangthaiduyet()
   {
   	$trangthai = 0;
