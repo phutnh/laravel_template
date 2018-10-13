@@ -11,8 +11,8 @@ class HoaHongRepository extends BaseRepository
   	return HoaHong::class;
   }
 
-  public function save()
+  public function save($data)
   {
-  	
+  	$this->create($data);
   }
 }

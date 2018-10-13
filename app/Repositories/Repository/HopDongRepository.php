@@ -3,6 +3,7 @@
 namespace App\Repositories\Repository;
 use App\Repositories\Eloquent\BaseRepository;
 use App\Models\HopDong;
+use DateTime;
 
 class HopDongRepository extends BaseRepository
 {
@@ -43,6 +44,7 @@ class HopDongRepository extends BaseRepository
     $data['nhanvien_id'] = getNhanVienID();
     $data['dinhkem'] = rtrim($listFile, '|');
     $data['trangthai'] = 'Chưa gửi';
+    $data['created_at'] = new DateTime;
 
     $this->create($data);
   }
@@ -55,6 +57,7 @@ class HopDongRepository extends BaseRepository
     ]);
 
     $data['nhanvien_id'] = getNhanVienID();
+    $data['updated_at'] = new DateTime;
 
     $this->update($data, $request->id);
   }
