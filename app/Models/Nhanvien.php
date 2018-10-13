@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\ResetPassword;
 use App\Models\HopDong;
+use App\Models\HoaHong;
 use DB;
 
 class NhanVien extends Authenticatable
@@ -32,12 +33,31 @@ class NhanVien extends Authenticatable
     return $this->hasMany(HopDong::class);
   }
 
+  public function hopdong()
+  {
+    return $this->hasMany(HoaHong::class);
+  }
+
   public function parent()
   {
     return $this->find($this->parent_id);
   }
 
   public function getAncestorsAttribute()
+  {
+    $ancestors = $this->ancestors();
+    $data = [];
+
+    foreach ($ancestors as $act) {
+      $ancestor = $this->find($act->id);
+      if ($ancestor)
+        array_push($data, $ancestor);
+    }
+
+    return $data;
+  }
+
+  private function ancestors()
   {
     $query = 'SELECT T2.id,
       T2.tennhanvien
