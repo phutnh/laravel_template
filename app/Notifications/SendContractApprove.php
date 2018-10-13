@@ -28,7 +28,7 @@ class SendContractApprove extends Notification
     return (new MailMessage)->greeting('Xin chào bạn!')
       ->subject('Hợp đồng yêu cầu duyệt')
       ->line('Một tài khoản đã gửi yêu cầu duyệt hợp đồng')
-      ->action('Truy cập', route('admin.hopdong.index', $this->hopdong_id))
+      ->action('Truy cập', route('admin.hopdong.update', $this->hopdong_id))
       ->line('Vui lòng vào trang quản lý để duyệt hợp đồng này.');
   }
 

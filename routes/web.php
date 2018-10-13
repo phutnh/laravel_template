@@ -49,14 +49,28 @@ Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'a
     Route::get('/them-moi', 'HopDongController@create')->name('admin.hopdong.create');
     Route::get('/chinh-sua/{id}', 'HopDongController@update')->name('admin.hopdong.update'); 
   });
+
+  // Route doanh thu
+  Route::group(['prefix' => 'doanh-thu'], function() {
+    Route::get('/', 'DoanhThuController@index')->name('admin.doanhthu.index');
+    Route::get('/chot-doanh-thu', 'DoanhThuController@action')->name('admin.doanhthu.action');
+  });
   
   
   // API Request action
-    Route::group(['prefix' => 'api', 'namespace' => 'Api'], function() {
+  Route::group(['prefix' => 'api', 'namespace' => 'Api'], function() {
+    Route::group(['prefix' => 'hop-dong'], function() {
       Route::post('/all', 'HopDongApi@all')->name('api.hopdong.all');
       Route::post('/create', 'HopDongApi@create')->name('api.hopdong.create');
       Route::post('/update/{id}', 'HopDongApi@update')->name('api.hopdong.update');
       Route::post('/action', 'HopDongApi@actionData')->name('api.hopdong.action');
     });
+  });
+
+  Route::group(['prefix' => 'api', 'namespace' => 'Api'], function() {
+    Route::group(['prefix' => 'doanh-thu'], function() {
+      Route::post('/all', 'DoanhThuApi@all')->name('api.doanhthu.all');
+    });
+  });
   
 });

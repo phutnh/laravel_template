@@ -24,6 +24,7 @@ class HopDongApi extends Controller
   {
     $this->repository = $repository;
     $this->nhanVienRepository = $nhanVienRepository;
+    $this->hoaHongRepository = $hoaHongRepository;
   }
   
   public function all(Request $request)
@@ -34,6 +35,9 @@ class HopDongApi extends Controller
         $linkEdit = route('admin.hopdong.update', $hopdong->id);
         $link = '<a href="'.$linkEdit.'" class="btn btn-info btn-sm"><i class="mdi mdi-table-edit"></i> Edit</a>';
         return $link;
+      })
+      ->editColumn('giatri', function($model) {
+        return formatMoneyData($model->giatri);
       })
       ->make(true);
   }
@@ -59,6 +63,12 @@ class HopDongApi extends Controller
     switch ($action) {
       case 'delete':
       {
+        if (!isAdminCP())
+        {
+          $message = 'Bạn không có quyền thao tác';
+          break;
+        }
+        
         foreach ($ids as $id) {
           $hopdong = $this->repository->query()->where(['sohopdong' => $id])->first();
           if($hopdong->trangthaiduyet() == 1)
@@ -74,6 +84,11 @@ class HopDongApi extends Controller
       }
       case 'approve':
       {
+        if (!isAdminCP())
+        {
+          $message = 'Bạn không có quyền thao tác';
+          break;
+        }
         foreach ($ids as $id) {
           $hopdong = $this->repository->query()->where(['sohopdong' => $id])->first();
           if($hopdong->trangthaiduyet() == 1)
@@ -120,6 +135,8 @@ class HopDongApi extends Controller
         break;
     }
 
+    // if ($request->form_detail)
+    //   return responseFormData('Duyệt hợp đồng thành công');
     return responseFormData($message);
   }
 
@@ -133,21 +150,46 @@ class HopDongApi extends Controller
     // Tính tiền trực tiếp
     $nhanvien->hoahongtamtinh = ($nhanvien->hoahongtamtinh + $hoahongtructiep);
     $nhanvien->save();
-    // Lưu hoa hồng nhân viên
+    // Lưu hoa hồng nhân viên trực tiếp
+    $level = 1;
+    $this->hoaHongRepository->save([
+      'loaihoahong' => 'Trực tiếp',
+      'mota' => 'Nhận tiền hoa hồng trực tiếp từ hợp đồng ' . $hopdong->sohopdong,
+      'nhanvien_id' => $nhanvien->id,
+      'giatri' => $hoahongtructiep,
+      'hopdong_id' => $hopdong->id,
+      'cayhoahong' => '',
+      'created_at' => new DateTime
+    ]);
     
     $ancestors = $nhanvien->ancestors;
     // Tính tiền gián tiếp
     $hoahonggiantiep = $hoahongtructiep * ($thamsogiantiep / 100);
     $sotiendanhan = $hoahongtructiep;
     $flag = 1;
-
+    $cayhoahong = $nhanvien->id.',';
+    $ancestorsNumber = (count($ancestors) - 1);
     foreach ($ancestors as $act) {
       if ($flag == 1)
         $sotiendanhan += $hoahonggiantiep;
       $act->hoahongtamtinh = ($act->hoahongtamtinh + $hoahonggiantiep);
       $act->save();
+      // Lưu hoa hồng nhân viên gián tiếp
+      $mota = 'Nhận tiền hoa hồng gián tiếp từ nhân viên '.$act->tennhanvien. '['.$act->manhanvien.'] thông qua hợp đồng ' .$hopdong->sohopdong;
+      $this->hoaHongRepository->save([
+        'loaihoahong' => 'Gián tiếp',
+        'mota' => $mota,
+        'nhanvien_id' => $act->id,
+        'giatri' => $hoahonggiantiep,
+        'hopdong_id' => $hopdong->id,
+        'cayhoahong' => rtrim($cayhoahong, ','),
+        'created_at' => new DateTime
+      ]);
       $hoahonggiantiep = $hoahonggiantiep * ($thamsogiantiep / 100);
       $sotiendanhan += $hoahonggiantiep;
+      $cayhoahong .= $act->id . ',';
+      if (intval($hoahonggiantiep) == 0)
+        break;
       $flag++;
     }
 

@@ -28,7 +28,7 @@ class SendContractApproved extends Notification
     return (new MailMessage)->greeting('Xin chào bạn!')
       ->subject('Hợp đồng đã được duyệt')
       ->line('Hợp đồng bạn gửi đã được duyệt')
-      ->action('Chi tiết', route('admin.hopdong.index', $this->hopdong_id))
+      ->action('Chi tiết', route('admin.hopdong.update', $this->hopdong_id))
       ->line('Vui lòng vào trang quản lý để duyệt hợp đồng này.');
   }
 

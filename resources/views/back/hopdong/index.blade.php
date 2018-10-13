@@ -2,7 +2,9 @@
 @section('styles')
 @endsection
 @section('scripts')
-<script>apiData = '{{ route('api.hopdong.all') }}'</script>
+<script>
+apiData = '{{ route('api.hopdong.all') }}';
+</script>
 <script src="{{ asset(config('setting.admin.path_js') . 'hopdong.js') }}"></script>
 @endsection
 

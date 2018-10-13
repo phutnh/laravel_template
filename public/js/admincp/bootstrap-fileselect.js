@@ -9,10 +9,10 @@
         this.$inputGroup = $('<div>').addClass('input-group');
         this.$inputGroupBtn = $('<label>').addClass('input-group-btn');
         this.$browseBtn = $('<span>');
-        this.$labelInput = $('<input>').attr('type', 'text').attr('readonly', true).addClass('form-control');
+        this.$labelInput = $('<input>').attr('type', 'text').attr('readonly', true).addClass('form-control mc-custom-file');
         this.translations = {
             'en': {
-                'browse': 'Browse',
+                'browse': 'Upload',
                 'rules': {
                     'numberOfFiles': 'Số lượng tệp có thể tải lên được giới hạn ở [num] tệp',
                     'fileExtensions': 'Định dạng tệp phải là: [ext]',

@@ -33,7 +33,7 @@ class NhanVien extends Authenticatable
     return $this->hasMany(HopDong::class);
   }
 
-  public function hopdong()
+  public function hoahong()
   {
     return $this->hasMany(HoaHong::class);
   }

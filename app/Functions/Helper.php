@@ -67,3 +67,21 @@ if(!function_exists('getQuyenNhanVien'))
 		return Auth::user()->phanquyen;
 	}
 }
+
+if(!function_exists('isAdminCP'))
+{
+	function isAdminCP()
+	{
+		return Auth::user()->phanquyen == 1 ? true : false;
+	}
+}
+
+if(!function_exists('formatDateTimeData'))
+{
+	function formatDateTimeData($date, $format = 'd-m-Y H:i:s')
+	{
+		if($date == null)
+			return date($format, strtotime(date($format)));
+		return date($format, strtotime($date));
+	}
+}

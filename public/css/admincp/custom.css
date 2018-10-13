@@ -6,73 +6,81 @@
 @import url(icons/material-design-iconic-font/css/materialdesignicons.min.css);
 
 .error-red {
-    color: red !important;
+  color: red !important;
 }
 
 /*Start Phut*/
 .mc-container {
 display: block;
-    position: relative;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    width: 15px;
-    height: 15px;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 15px;
+  height: 15px;
 }
 
 .mc-container input[type="checkbox"] {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
 }
 
 .mc-checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 15px;
-    width: 15px;
-    background-color: #fff;
-    border: 2px solid #3998f8;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: #fff;
+  border: 2px solid #3998f8;
 }
 
 .mc-container:hover input[type="checkbox"] ~ .mc-checkmark {
-    background-color: #ccc;
+  background-color: #ccc;
 }
 
 .mc-container input[type="checkbox"]:checked ~ .mc-checkmark {
-    background-color: #2196F3;
+  background-color: #2196F3;
 }
 
 .mc-checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
+  content: "";
+  position: absolute;
+  display: none;
 }
 
 .mc-container input[type="checkbox"]:checked ~ .mc-checkmark:after {
-    display: block;
+  display: block;
 }
 
 .mc-container .mc-checkmark:after {
-    left: 3px;
-    top: 0x;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
+  left: 3px;
+  top: 0x;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 
 #table-data-content td {
-    vertical-align: middle;
+  vertical-align: middle;
+}
+
+.mc-notify {
+  margin-left: 5px;
+}
+
+.mc-custom-file {
+  background: #fff !important;
 }
 /*End phut*/

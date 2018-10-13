@@ -106,7 +106,7 @@ $("#form-data-hopdong").ajaxForm({
           });
         }, 3000);
 
-        $('body').animate({
+        $('html, body').animate({
           scrollTop: 0
         }, 500);
 
@@ -139,4 +139,4 @@ $('#form-data-hopdong').on('submit', function(e){
 
       e.preventDefault();
       
-   });
+});
