@@ -10,55 +10,47 @@ optionsDataTable = {
   "processing": true,
   "serverSide": true,
   "columns": [{
-      "className": 'details-control',
-      "orderable": false,
-      "searchable": false,
-      "data": null,
-      "defaultContent": ''
-    },
-    {
-      "data": "sohopdong",
+      "data": "id",
       "orderable": false,
       "searchable": false
     },
     {
-      "data": "sohopdong"
+      "data": "nhanvien.tennhanvien",
+      "name": "nhanvien.tennhanvien"
     },
     {
-      "data": "tenhopdong"
+      "data": "hopdong.sohopdong",
+      "name": "hopdong.sohopdong"
     },
     {
-      "data": "tenkhachhang"
+      "data": "hopdong.tenhopdong",
+      "name": "hopdong.tenhopdong"
     },
     {
-      "data": "giatri"
+      "data": "giatri",
+      "name": "giatri"
     },
     {
-      "data": "trangthai"
+      "data": "loaihoahong",
+      "name": "loaihoahong"
     },
-    {
-      "data": "action",
-      "orderable": false,
-      "searchable": false
-    }
   ],
+  'order': [1, 'asc'],
   'columnDefs': [{
-    'targets': 1,
+    'targets': 0,
     'searchable': false,
     'orderable': false,
     'className': 'dt-body-center',
     'render': function(data, type, full, meta) {
       return `<label class="mc-container">&nbsp;
-          <input type="checkbox" class="listCheckbox" name="id[]" value="${$('<div/>').text(data).html()}">
-          <span class="mc-checkmark"></span>
-        </label>`;
+        <input type="checkbox" class="listCheckbox" name="id[]" value="${$('<div/>').text(data).html()}">
+        <span class="mc-checkmark"></span>
+      </label>`;
 
       return '<input type="checkbox" name="id[]" value="' +
         $('<div/>').text(data).html() + '">';
     }
   }],
-  'order': [2, 'asc'],
-  responsive: true
 };
 
 table = $('#table-data-content').DataTable(optionsDataTable);
@@ -79,35 +71,7 @@ $('#table-data-content tbody').on('change', 'input[type="checkbox"]', function()
   }
 });
 
-$('#table-data-content tbody').on('click', 'td.details-control', function() {
-  var tr = $(this).closest('tr');
-  var row = table.row(tr);
-
-  if (row.child.isShown()) {
-    row.child.hide();
-    tr.removeClass('shown');
-  } else {
-    row.child(formatDataDetail(row.data())).show();
-    tr.addClass('shown');
-  }
-});
-
-function formatDataDetail(d) {
-  dinhkem = d.dinhkem.split('|');
-  links = '';
-  $.each(dinhkem, function(key, value) {
-    filetype = value.split('.').pop()
-    links += `<a class="document-item" href="uploads/hopdong/${value}" filetype="${filetype}">
-      <span class="fileCorner"></span>Chi tiết</a>`;
-  });
-
-  return '<b>Email khách hàng:</b> ' + d.email + '<br>' +
-    '<b>Địa chỉ:</b> ' + d.diachi + '<br>' +
-    '<b>Đính kèm:</b> <br>' + links;
-}
-
-
-$("#form-data-hopdong").ajaxForm({
+$("#form-data-doanhthu").ajaxForm({
   complete: function(response) {
     if (response.status == 200) {
 
@@ -139,7 +103,7 @@ $("#form-data-hopdong").ajaxForm({
   },
 });
 
-$('#form-data-hopdong').on('submit', function(e) {
+$('#form-data-doanhthu').on('submit', function(e) {
   var form = this;
   table.$('input[type="checkbox"]').each(function() {
     if (!$.contains(document, this)) {
@@ -153,7 +117,5 @@ $('#form-data-hopdong').on('submit', function(e) {
       }
     }
   });
-
   e.preventDefault();
-
 });

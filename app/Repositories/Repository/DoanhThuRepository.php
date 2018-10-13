@@ -13,7 +13,7 @@ class DoanhThuRepository extends BaseRepository
 
   public function datatables()
   {
-  	$doanhthu = $this->query()->with(['nhanvien', 'nguoichot'])->select('doanhthu.*');
+  	$doanhthu = $this->query()->with(['nguoichot'])->select('doanhthu.*');
   	return $doanhthu->get();
   }
 }

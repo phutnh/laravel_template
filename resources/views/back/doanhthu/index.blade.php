@@ -15,10 +15,10 @@ optionsDataTable = {
   "processing": true,
   "serverSide": true,
   "columns": [
-    { "data": "nhanvien.tennhanvien" , "name": "nhanvien.tennhanvien" },
+    { "data": "nguoichot.tennhanvien" , "name": "nguoichot.tennhanvien" },
     { "data": "sotien" , "name": "sotien"},
     { "data": "ngaychot", "name": "ngaychot" },
-    { "data": "nguoichot.tennhanvien", "name": "nguoichot.tennhanvien" },
+    { "data": "action" },
   ]
 };
 table = $('#table-data-content').DataTable(optionsDataTable);
@@ -33,19 +33,16 @@ table = $('#table-data-content').DataTable(optionsDataTable);
         @include('back.partials.ajax_form_messages')
         <div class="card-body">
           <div class="block-header">
-            <h5 class="card-title">Danh sách doanh thu đã chi</h5>
-            <div class="block-tool">
-              <a class="btn btn-success btn-sm" href="{{ route('admin.hopdong.create') }}"><i class="mdi mdi-plus-box"></i> In phiếu chi</a>
-            </div>
+            <h5 class="card-title">Danh sách doanh thu</h5>
           </div>
           <div class="table-responsive">
             <table id="table-data-content" class="table table-striped table-bordered">
               <thead>
                 <tr>
-                  <th>Nhân viên</th>
+                  <th>Người chốt</th>
                   <th>Số tiền</th>
                   <th width="150">Ngày chốt</th>
-                  <th>Người chốt</th>
+                  <th width="70">Chi tiết</th>
                 </tr>
               </thead>
             </table>

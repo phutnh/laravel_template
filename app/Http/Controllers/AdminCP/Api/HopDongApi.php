@@ -71,6 +71,12 @@ class HopDongApi extends Controller
         
         foreach ($ids as $id) {
           $hopdong = $this->repository->query()->where(['sohopdong' => $id])->first();
+          if (!$hopdong)
+          {
+            $message = 'Không tìm thấy hợp đồng ' .$sohopdong;
+            break;
+          }
+
           if($hopdong->trangthaiduyet() == 1)
           {
             $message = 'Hợp đồng <b>'.$hopdong->sohopdong.'</b> đã được duyệt nên không thể xóa';
@@ -91,6 +97,12 @@ class HopDongApi extends Controller
         }
         foreach ($ids as $id) {
           $hopdong = $this->repository->query()->where(['sohopdong' => $id])->first();
+          if (!$hopdong)
+          {
+            $message = 'Không tìm thấy hợp đồng ' .$sohopdong;
+            break;
+          }
+
           if($hopdong->trangthaiduyet() == 1)
           {
             $message = 'Hợp đồng <b>'.$hopdong->sohopdong.'</b> đã được duyệt nên không cần duyệt';
@@ -113,6 +125,12 @@ class HopDongApi extends Controller
       {
         foreach ($ids as $id) {
           $hopdong = $this->repository->query()->where(['sohopdong' => $id])->first();
+          if (!$hopdong)
+          {
+            $message = 'Không tìm thấy hợp đồng ' .$sohopdong;
+            break;
+          }
+
           if($hopdong->trangthaiduyet() == 1)
           {
             $message = 'Hợp đồng <b>'.$hopdong->sohopdong.'</b> đã được duyệt nên không cần gửi duyệt';
@@ -135,8 +153,6 @@ class HopDongApi extends Controller
         break;
     }
 
-    // if ($request->form_detail)
-    //   return responseFormData('Duyệt hợp đồng thành công');
     return responseFormData($message);
   }
 
@@ -159,7 +175,8 @@ class HopDongApi extends Controller
       'giatri' => $hoahongtructiep,
       'hopdong_id' => $hopdong->id,
       'cayhoahong' => '',
-      'created_at' => new DateTime
+      'created_at' => new DateTime,
+      'trangthai' => 0
     ]);
     
     $ancestors = $nhanvien->ancestors;
@@ -183,7 +200,8 @@ class HopDongApi extends Controller
         'giatri' => $hoahonggiantiep,
         'hopdong_id' => $hopdong->id,
         'cayhoahong' => rtrim($cayhoahong, ','),
-        'created_at' => new DateTime
+        'created_at' => new DateTime,
+        'trangthai' => 0
       ]);
       $hoahonggiantiep = $hoahonggiantiep * ($thamsogiantiep / 100);
       $sotiendanhan += $hoahonggiantiep;

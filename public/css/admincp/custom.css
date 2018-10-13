@@ -83,4 +83,8 @@ display: block;
 .mc-custom-file {
   background: #fff !important;
 }
+
+.table td, .table th {
+  padding: 10px !important;
+}
 /*End phut*/

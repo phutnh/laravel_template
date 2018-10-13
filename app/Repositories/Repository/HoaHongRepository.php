@@ -15,4 +15,13 @@ class HoaHongRepository extends BaseRepository
   {
   	$this->create($data);
   }
+
+  public function datatables()
+  {
+  	$doanhthu = $this->query()
+  	->with(['nhanvien', 'hopdong'])
+  	->where('trangthai', 0)
+  	->select('hoahong.*');
+  	return $doanhthu->get();
+  }
 }

@@ -54,6 +54,7 @@ Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'a
   Route::group(['prefix' => 'doanh-thu'], function() {
     Route::get('/', 'DoanhThuController@index')->name('admin.doanhthu.index');
     Route::get('/chot-doanh-thu', 'DoanhThuController@action')->name('admin.doanhthu.action');
+    Route::get('/chi-tiet/{id}', 'DoanhThuController@detail')->name('admin.doanhthu.detail');
   });
   
   
@@ -70,6 +71,13 @@ Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'a
   Route::group(['prefix' => 'api', 'namespace' => 'Api'], function() {
     Route::group(['prefix' => 'doanh-thu'], function() {
       Route::post('/all', 'DoanhThuApi@all')->name('api.doanhthu.all');
+      Route::post('/action', 'DoanhThuApi@actionData')->name('api.doanhthu.action');
+    });
+  });
+
+  Route::group(['prefix' => 'api', 'namespace' => 'Api'], function() {
+    Route::group(['prefix' => 'hoa-hong'], function() {
+      Route::post('/all', 'HoaHongApi@all')->name('api.hoahong.all');
     });
   });
   
