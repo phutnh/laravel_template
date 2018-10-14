@@ -11,7 +11,7 @@ class DoanhThuRepository extends BaseRepository
   	return DoanhThu::class;
   }
 
-  public function datatables()
+  public function datatables($request)
   {
   	$doanhthu = $this->query()->with(['nguoichot'])->select('doanhthu.*');
   	return $doanhthu->get();

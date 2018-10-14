@@ -21,7 +21,9 @@ apiData = '{{ route('api.hopdong.all') }}';
               <h5 class="card-title">Danh sách hợp đồng</h5>
               <div class="block-tool">
                 <a class="btn btn-success btn-sm" href="{{ route('admin.hopdong.create') }}"><i class="mdi mdi-plus-box"></i> Tạo mới</a>
+                @if(isAdminCP())
                 <button class="btn btn-info btn-sm" name="action" value="approve" type="submit"><i class="mdi mdi-marker-check"></i> Duyệt hợp đồng</button>
+                @endif
                 <button class="btn btn-primary btn-sm" name="action" value="send" type="submit"><i class="mdi mdi-marker-check"></i> Gửi duyệt</button>
                 <button class="btn btn-danger btn-sm" name="action" value="delete" type="submit"><i class="mdi mdi-delete-empty"></i> Xóa bỏ</button>
               </div>

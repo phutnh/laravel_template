@@ -87,4 +87,28 @@ display: block;
 .table td, .table th {
   padding: 10px !important;
 }
+
+.mc-label-filter {
+  position: absolute;
+  left: 20px;
+}
+
+#title-filter {
+  color: #e60a27;
+}
+
+#ajax-messases-loading {
+  position: fixed;
+  bottom: 0;
+  line-height: 50px;
+  height: 50px;
+  background: #dde8f9;
+  text-align: center;
+  width: 100%;
+  left: 0;
+  color: red;
+  font-weight: bold;
+  font-size: 18px;
+  display: none;
+}
 /*End phut*/

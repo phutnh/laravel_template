@@ -85,3 +85,33 @@ if(!function_exists('formatDateTimeData'))
 		return date($format, strtotime($date));
 	}
 }
+
+if(!function_exists('formatDateSqlData'))
+{
+	function formatDateSqlData($date)
+	{
+		if($date == null)
+			return date('Y-m-d', strtotime(date($format)));
+		$dates = explode('/', $date);
+		$data = $dates[2].'/'.$dates[1].'/'.$dates[0];
+		return $data;
+	}
+}
+
+if(!function_exists('getFristDayOfMonth'))
+{
+	function getFristDayOfMonth()
+	{
+		$date = date('Y-m-d');
+		return date("Y-m-01", strtotime($date));
+	}
+}
+
+if(!function_exists('getLastDayOfMonth'))
+{
+	function getLastDayOfMonth()
+	{
+		$date = date('Y-m-d');
+		return date("Y-m-t", strtotime($date));
+	}
+}

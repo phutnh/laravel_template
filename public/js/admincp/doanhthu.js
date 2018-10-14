@@ -1,3 +1,6 @@
+var start_date = $("#start-date").val();
+var end_date = $("#end-date").val();
+
 optionsDataTable = {
   "ajax": {
     url: apiData,
@@ -5,6 +8,10 @@ optionsDataTable = {
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
+    data: function (d) {
+      d.start_date = start_date,
+      d.end_date = end_date
+    }
   },
   "language": languageDatatable,
   "processing": true,
@@ -29,6 +36,10 @@ optionsDataTable = {
     {
       "data": "giatri",
       "name": "giatri"
+    },
+    {
+      "data": "created_at",
+      "name": "created_at"
     },
     {
       "data": "loaihoahong",
@@ -88,6 +99,8 @@ $("#form-data-doanhthu").ajaxForm({
         });
       }, 3000);
 
+      $('#ajax-messases-loading').css({ "display": "none" });
+
       $('html, body').animate({
         scrollTop: 0
       }, 500);
@@ -100,6 +113,8 @@ $("#form-data-doanhthu").ajaxForm({
   beforeSubmit: function(arr, $form, options) {
     if (!confirm("Bạn có chắc chắn chọn thao tác này không !"))
       return false;
+
+    $('#ajax-messases-loading').css({ "display": "block" });
   },
 });
 
@@ -119,3 +134,13 @@ $('#form-data-doanhthu').on('submit', function(e) {
   });
   e.preventDefault();
 });
+
+$("#btn-search").click(function() {
+  start_date = $("#start-date").val();
+  end_date = $("#end-date").val();
+  if(start_date && end_date)
+    $("#title-filter").html(start_date + ' đến ' + end_date);
+  else
+    $("#title-filter").html($("#title-filter-none").data('value'));
+  table.ajax.reload();
+})

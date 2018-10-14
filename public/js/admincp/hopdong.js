@@ -124,6 +124,8 @@ $("#form-data-hopdong").ajaxForm({
         });
       }, 3000);
 
+      $('#ajax-messases-loading').css({ "display": "none" });
+
       $('html, body').animate({
         scrollTop: 0
       }, 500);
@@ -136,6 +138,7 @@ $("#form-data-hopdong").ajaxForm({
   beforeSubmit: function(arr, $form, options) {
     if (!confirm("Bạn có chắc chắn chọn thao tác này không !"))
       return false;
+    $('#ajax-messases-loading').css({ "display": "block" });
   },
 });
 

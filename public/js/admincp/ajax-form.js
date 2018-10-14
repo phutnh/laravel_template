@@ -17,6 +17,8 @@ $(document).ready(function() {
           });
         }, 3000);
 
+        $('#ajax-messases-loading').css({ "display": "none" });
+
         $('html, body').animate({
           scrollTop: 0
         }, 1000);
@@ -33,11 +35,12 @@ $(document).ready(function() {
     },
     beforeSubmit: function(arr, $form, options) {
       $('#send-process').width('0%');
+      $('#ajax-messases-loading').css({ "display": "block" });
     },
     resetForm: true,
     uploadProgress: function(event, position, total, percentComplete) {
       percentVal = percentComplete + '%';
-      $('#send-process').width(percentVal)
+      $('#send-process').width(percentVal);
     },
   };
 
@@ -60,6 +63,8 @@ $(document).ready(function() {
           });
         }, 3000);
 
+        $('#ajax-messases-loading').css({ "display": "none" });
+
         $('html, body').animate({
           scrollTop: 0
         }, 1000);
@@ -73,11 +78,12 @@ $(document).ready(function() {
     beforeSerialize: function($form, options) {
     },
     beforeSubmit: function(arr, $form, options) {
-      $('#send-process').width('0%')
+      $('#send-process').width('0%');
+      $('#ajax-messases-loading').css({ "display": "block" });
     },
     uploadProgress: function(event, position, total, percentComplete) {
       percentVal = percentComplete + '%';
-      $('#send-process').width(percentVal)
+      $('#send-process').width(percentVal);
     },
   };
 

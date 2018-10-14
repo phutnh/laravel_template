@@ -20,6 +20,9 @@ class DoanhThuController extends Controller
   }
   public function index()
   {
+    if (!isAdminCP()) 
+      return redirect()->back();
+    
   	$template = $this->template;
     $template['breadcrumbs'] = [
       [
@@ -39,6 +42,9 @@ class DoanhThuController extends Controller
 
   public function action()
   {
+    if (!isAdminCP()) 
+      return redirect()->back();
+
     $template = $this->template;
     $template['breadcrumbs'] = [
       [

@@ -16,12 +16,26 @@ class HoaHongRepository extends BaseRepository
   	$this->create($data);
   }
 
-  public function datatables()
+  public function datatables($request)
   {
-  	$doanhthu = $this->query()
+  	$hoahong = $this->query()
   	->with(['nhanvien', 'hopdong'])
   	->where('trangthai', 0)
-  	->select('hoahong.*');
-  	return $doanhthu->get();
+  	;
+    $start_date = $request->start_date;
+    $end_date = $request->end_date;
+    if ($start_date && $end_date) {
+      $start_date = formatDateSqlData($start_date);
+      $end_date = formatDateSqlData($end_date);
+    }
+    else {
+      $start_date = getFristDayOfMonth($start_date);
+      $end_date = getLastDayOfMonth($end_date);
+    }
+    // dd($start_date);
+    $hoahong->whereDate('created_at', '>=', $start_date);
+    $hoahong->whereDate('created_at', '<=', $end_date);
+    $hoahong->select('hoahong.*');
+  	return $hoahong->get();
   }
 }

@@ -23,6 +23,9 @@ class HoaHongApi extends Controller
       ->editColumn('giatri', function($model) {
         return formatMoneyData($model->giatri);
       })
+      ->editColumn('created_at', function($model) {
+        return formatDateTimeData($model->created_at);
+      })
       ->make(true);
   }
 }
