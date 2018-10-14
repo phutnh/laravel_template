@@ -95,11 +95,15 @@ $('#table-data-content tbody').on('click', 'td.details-control', function() {
 function formatDataDetail(d) {
   dinhkem = d.dinhkem.split('|');
   links = '';
+
   $.each(dinhkem, function(key, value) {
-    filetype = value.split('.').pop()
+    filetype = value.split('.').pop();
     links += `<a class="document-item" href="uploads/hopdong/${value}" filetype="${filetype}">
       <span class="fileCorner"></span>Chi tiết</a>`;
   });
+
+  if(dinhkem[0] == '')
+    links = '';
 
   return '<b>Email khách hàng:</b> ' + d.email + '<br>' +
     '<b>Địa chỉ:</b> ' + d.diachi + '<br>' +
@@ -124,8 +128,6 @@ $("#form-data-hopdong").ajaxForm({
         });
       }, 3000);
 
-      $('#ajax-messases-loading').css({ "display": "none" });
-
       $('html, body').animate({
         scrollTop: 0
       }, 500);
@@ -133,6 +135,7 @@ $("#form-data-hopdong").ajaxForm({
       table.ajax.reload();
 
     } else {}
+    $('#ajax-messases-loading').css({ "display": "none" });
 
   },
   beforeSubmit: function(arr, $form, options) {

@@ -17,8 +17,6 @@ $(document).ready(function() {
           });
         }, 3000);
 
-        $('#ajax-messases-loading').css({ "display": "none" });
-
         $('html, body').animate({
           scrollTop: 0
         }, 1000);
@@ -29,7 +27,7 @@ $(document).ready(function() {
         // console.clear();
         showFormError(response.responseJSON);
       }
-
+      $('#ajax-messases-loading').css({ "display": "none" });
     },
     beforeSerialize: function($form, options) {
     },
@@ -63,8 +61,6 @@ $(document).ready(function() {
           });
         }, 3000);
 
-        $('#ajax-messases-loading').css({ "display": "none" });
-
         $('html, body').animate({
           scrollTop: 0
         }, 1000);
@@ -74,6 +70,7 @@ $(document).ready(function() {
       } else {
         showFormError(response.responseJSON);
       }
+      $('#ajax-messases-loading').css({ "display": "none" });
     },
     beforeSerialize: function($form, options) {
     },

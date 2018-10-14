@@ -99,8 +99,6 @@ $("#form-data-doanhthu").ajaxForm({
         });
       }, 3000);
 
-      $('#ajax-messases-loading').css({ "display": "none" });
-
       $('html, body').animate({
         scrollTop: 0
       }, 500);
@@ -108,7 +106,7 @@ $("#form-data-doanhthu").ajaxForm({
       table.ajax.reload();
 
     } else {}
-
+    $('#ajax-messases-loading').css({ "display": "none" });
   },
   beforeSubmit: function(arr, $form, options) {
     if (!confirm("Bạn có chắc chắn chọn thao tác này không !"))
