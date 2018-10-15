@@ -1,52 +1,28 @@
-var start_date = $("#start-date").val();
-var end_date = $("#end-date").val();
-
 optionsDataTable = {
   "ajax": {
     url: apiData,
     "type": "POST",
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    data: function (d) {
-      d.start_date = start_date,
-      d.end_date = end_date
     }
   },
   "language": languageDatatable,
   "processing": true,
   "serverSide": true,
-  "columns": [{
+  "columns": [
+    {
       "data": "id",
       "orderable": false,
       "searchable": false
     },
-    {
-      "data": "nhanvien.tennhanvien",
-      "name": "nhanvien.tennhanvien"
-    },
-    {
-      "data": "hopdong.sohopdong",
-      "name": "hopdong.sohopdong"
-    },
-    {
-      "data": "hopdong.tenhopdong",
-      "name": "hopdong.tenhopdong"
-    },
-    {
-      "data": "giatri",
-      "name": "giatri"
-    },
-    {
-      "data": "created_at",
-      "name": "created_at"
-    },
-    {
-      "data": "loaihoahong",
-      "name": "loaihoahong"
-    },
+    { "data": "manhanvien" },
+    { "data": "tennhanvien" },
+    { "data": "email" },
+    { "data": "hoahongtamtinh" }
   ],
   'order': [1, 'asc'],
+  'paging': false,
+  "searching": false,
   'columnDefs': [{
     'targets': 0,
     'searchable': false,
@@ -105,7 +81,23 @@ $("#form-data-doanhthu").ajaxForm({
 
       table.ajax.reload();
 
-    } else {}
+    } else {
+      messases_text = '';
+      $.each(response.responseJSON, function(k, v) {
+        messases_text += v;
+      });
+      window.setTimeout(function() {
+        $("#ajax-messases").css({
+          "display": "none"
+        });
+      }, 3000);
+
+      $("#ajax-messases").css({
+        "display": "block"
+      });
+
+      $("#ajax-messases").find('.messases-text').html(messases_text);
+    }
     $('#ajax-messases-loading').css({ "display": "none" });
   },
   beforeSubmit: function(arr, $form, options) {
@@ -132,13 +124,3 @@ $('#form-data-doanhthu').on('submit', function(e) {
   });
   e.preventDefault();
 });
-
-$("#btn-search").click(function() {
-  start_date = $("#start-date").val();
-  end_date = $("#end-date").val();
-  if(start_date && end_date)
-    $("#title-filter").html(start_date + ' đến ' + end_date);
-  else
-    $("#title-filter").html($("#title-filter-none").data('value'));
-  table.ajax.reload();
-})

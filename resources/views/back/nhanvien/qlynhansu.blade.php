@@ -31,8 +31,8 @@
                 @foreach($template['users'] as $user)
                 <tr>
                     <td>{{ $user-> id }}</td>
-                    <!--TinhNT11 add route profile 12102018-->
-                    <td><a href="{{ route('admin.profile.view',$user->id) }}">{{ $user-> tennhanvien }}</a></td>
+                    <!--TinhNT11 edit route profile 12102018-->
+                    <td><a href="#">{{ $user-> tennhanvien }}</a></td>
                     <td>{{ $user-> manhanvien }}</td>
                     <td>{{ $user-> taikhoan }}</td>
                     <td>{{ $user-> sodidong }}</td>

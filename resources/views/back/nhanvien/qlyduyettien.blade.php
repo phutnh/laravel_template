@@ -36,6 +36,8 @@
   });
         
   $(document).ready(function(){
+    $('#table-data-content').DataTable();
+    
     $('#table-data-content tbody').on( 'click', 'button', function () {
         //var table = $('#table-data-content').DataTable();
         //var data = table.row( $(this).parents('tr') ).data();

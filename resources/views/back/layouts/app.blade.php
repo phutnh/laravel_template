@@ -36,7 +36,7 @@
       <div class="page-wrapper">
 	    	@include('back.layouts.breadcrumb')
 				@yield('content')
-          <div id="ajax-messases-loading">Loading........</div>
+				<div id="ajax-messases-loading">Loading........</div>
 	      <footer class="footer text-center">
 	        All Rights Reserved. Copyright {{ date('Y') }}
 	      </footer>

@@ -16,7 +16,7 @@ class HopDongRequest extends FormRequest
     $id = isset($this->id) ? ',sohopdong,' . $this->id : '';
 
     return [
-      'sohopdong' => 'required|unique:hopdong' . $id,
+      'sohopdong' => 'required|alpha_dash|unique:hopdong' . $id,
       'tenhopdong' => 'required|min:5',
       'giatri' => 'required|numeric|min:0',
       'tenkhachhang' => 'required|min:3',
@@ -31,6 +31,7 @@ class HopDongRequest extends FormRequest
   {
     return [
       'sohopdong.required' => 'Vui lòng nhập số hợp đồng',
+      'sohopdong.alpha_dash' => 'Số hợp đồng chỉ có thể chứa chữ cái, số và dấu gạch ngang.',
       'sohopdong.unique' => 'Số hợp đồng vừa nhập đã tồn tại',
       'tenhopdong.required' => 'Vui lòng nhập tên hợp đồng',
       'tenhopdong.min' => 'Vui lòng nhập tên hợp đồng từ 5 ký tự',

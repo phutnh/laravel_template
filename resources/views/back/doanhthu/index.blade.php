@@ -5,7 +5,7 @@
 <script>
 optionsDataTable = {
   "ajax": {
-    url: "{{ route('api.doanhthu.all') }}",
+    url: "{{ route('api.doanhthu.dachot') }}",
     "type": "POST",
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -33,16 +33,16 @@ table = $('#table-data-content').DataTable(optionsDataTable);
         @include('back.partials.ajax_form_messages')
         <div class="card-body">
           <div class="block-header">
-            <h5 class="card-title">Danh sách doanh thu</h5>
+            <h5 class="card-title">Danh sách doanh thu đã chốt</h5>
           </div>
           <div class="table-responsive">
             <table id="table-data-content" class="table table-striped table-bordered">
               <thead>
                 <tr>
-                  <th>Người chốt</th>
-                  <th>Số tiền</th>
-                  <th width="150">Ngày chốt</th>
-                  <th width="70">Chi tiết</th>
+                  <th nowrap>Người chốt</th>
+                  <th nowrap>Số tiền</th>
+                  <th width="150" nowrap>Ngày chốt</th>
+                  <th width="70" nowrap>Chi tiết</th>
                 </tr>
               </thead>
             </table>

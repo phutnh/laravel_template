@@ -18,7 +18,8 @@ class DoanhThuController extends Controller
     $this->template['title-breadcrumb'] = 'Doanh thu';
     $this->repository = $repository;
   }
-  public function index()
+
+  public function doanhThuDaChot()
   {
     if (!isAdminCP()) 
       return redirect()->back();
@@ -31,7 +32,7 @@ class DoanhThuController extends Controller
         'active' => false
       ],
       [
-        'name' => 'Danh sách',
+        'name' => 'Danh sách doanh thu đã chốt',
         'link' => '',
         'active' => true
       ],
@@ -39,6 +40,29 @@ class DoanhThuController extends Controller
 
     return view('back.doanhthu.index', compact('template'));
   }
+
+  public function doanhThuThang()
+  {
+    if (!isAdminCP()) 
+      return redirect()->back();
+    
+    $template = $this->template;
+    $template['breadcrumbs'] = [
+      [
+        'name' => 'Doanh thu',
+        'link' => route('admin.doanhthu.index'),
+        'active' => false
+      ],
+      [
+        'name' => 'Doanh thu nhân viên',
+        'link' => '',
+        'active' => true
+      ],
+    ];
+
+    return view('back.doanhthu.thang', compact('template'));
+  }
+
 
   public function action()
   {

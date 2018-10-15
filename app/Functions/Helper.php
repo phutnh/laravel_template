@@ -68,6 +68,7 @@ if(!function_exists('getQuyenNhanVien'))
 	}
 }
 
+
 if(!function_exists('isAdminCP'))
 {
 	function isAdminCP()
@@ -75,6 +76,7 @@ if(!function_exists('isAdminCP'))
 		return Auth::user()->phanquyen == 1 ? true : false;
 	}
 }
+
 
 if(!function_exists('formatDateTimeData'))
 {
@@ -85,6 +87,7 @@ if(!function_exists('formatDateTimeData'))
 		return date($format, strtotime($date));
 	}
 }
+
 
 if(!function_exists('formatDateSqlData'))
 {
@@ -97,6 +100,7 @@ if(!function_exists('formatDateSqlData'))
 		return $data;
 	}
 }
+
 
 if(!function_exists('getFristDayOfMonth'))
 {

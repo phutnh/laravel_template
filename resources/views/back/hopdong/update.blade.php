@@ -3,6 +3,7 @@
 @endsection
 @section('scripts')
 <script src="{{ asset(config('setting.admin.path_js') . 'bootstrap-fileselect.js') }}"></script>
+<script src="{{ asset(config('setting.admin.path_js') . 'jquery.number.js') }}"></script>
 <script>
 $('#dinhkem').fileselect({
   allowedFileExtensions: ['jpg', 'jpge', 'pdf', 'png', 'doc', 'docx'],
@@ -12,6 +13,7 @@ $('#dinhkem').fileselect({
     .after('<span class="small text-danger">' + m + '</span>');
   }
 });
+$("#giatri").number(true, 0);
 $("#form-action-detail").ajaxForm({
   complete: function(response) {
     if (response.status == 200) {
@@ -123,7 +125,25 @@ $("#form-action-detail").ajaxForm({
             <div class="form-group row">
               <label class="col-md-2 control-label col-form-label">File/Ảnh đính kèm</label>
               <div class="col-md-10 mc-form-input">
-                <input type="file" class="custom-file-input" name="dinhkem" id="dinhkem" multiple="multiple">
+                <input type="file" class="custom-file-input" name="dinhkem[]" id="dinhkem" multiple="multiple">
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-2"></div>
+              <div class="col-md-10 mc-form-input">
+              @php
+              $files = $hopdong->dinhkem;
+              $files = explode('|', $files);
+              @endphp
+              @if($files[0] != '')
+                @foreach ($files as $file)
+                @php
+                $filetype = explode('.', $file);
+                @endphp
+                <a class="document-item" href="uploads/hopdong/{{ $file }}" filetype="{{ $filetype[1] }}">
+                <span class="fileCorner"></span>Chi tiết</a>
+                @endforeach
+              @endif
               </div>
             </div>
             <div class="form-group row mc-no-margin-bottom">
@@ -138,7 +158,7 @@ $("#form-action-detail").ajaxForm({
           <div class="border-top">
             <div class="card-body">
               @if ($canUpdate)
-              <button type="submit" class="btn btn-primary">Chỉnh sửa</button>
+              <button type="submit" class="btn btn-primary" id="button-update">Chỉnh sửa</button>
               @else
               @if (isAdminCP())
                 <input type="text" name="id[]" value="{{ $hopdong->sohopdong }}" hidden>

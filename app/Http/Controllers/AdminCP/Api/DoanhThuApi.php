@@ -6,25 +6,29 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Repository\DoanhThuRepository;
 use App\Repositories\Repository\HoaHongRepository;
+use App\Repositories\Repository\NhanVienRepository;
 use Datatables;
 use DateTime;
 use App\Models\DoanhThu;
 use App\Models\ChiTietDoanhThu;
+use App\Http\Requests\ChotDoanhThuRequest;
 
 class DoanhThuApi extends Controller
 {
   protected $repository = '';
   protected $hoaHongRepository = '';
+  protected $nhanVienRepository = '';
 
-  public function __construct(DoanhThuRepository $repository, HoaHongRepository $hoaHongRepository)
+  public function __construct(DoanhThuRepository $repository, HoaHongRepository $hoaHongRepository, NhanVienRepository $nhanVienRepository)
   {
   	$this->repository = $repository;
     $this->hoaHongRepository = $hoaHongRepository;
+    $this->nhanVienRepository = $nhanVienRepository;
   }
 
-  public function all(Request $request)
+  public function danhThuDaChot(Request $request)
   {
-  	$doanhthu = $this->repository->datatables($request);
+  	$doanhthu = $this->repository->danhThuDaChot($request);
   	return Datatables::of($doanhthu)
       ->editColumn('ngaychot', function($model) {
         return formatDateTimeData($model->ngaychot);
@@ -39,12 +43,35 @@ class DoanhThuApi extends Controller
       ->make(true);
   }
 
-  public function actionData(Request $request)
+  public function doanhThuThang(Request $request)
+  {
+    $doanhthu = $this->repository->doanhThuThang($request);
+    return Datatables::of($doanhthu)
+      ->editColumn('doanhthu.ngaychot', function($model) {
+        return formatDateTimeData($model->doanhthu->ngaychot);
+      })
+      ->editColumn('sotiennv', function($model) {
+        return formatMoneyData($model->sotiennv);
+      })
+      ->make(true);
+  }
+
+  public function dataChotDoanhThu(Request $request)
+  {
+    $data = $this->nhanVienRepository->query()->where('hoahongtamtinh', '>', 0)
+      ->where('trangthai', 1)
+      ->get();
+    return Datatables::of($data)
+      ->editColumn('hoahongtamtinh', function($model) {
+          return formatMoneyData($model->hoahongtamtinh);
+        })
+      ->make(true);
+  }
+
+  public function actionData(ChotDoanhThuRequest $request)
   {
     $action = $request->action;
     $ids = $request->id;
-    if (!$ids)
-      return responseFormData('Vui lòng chọn dòng để thao tác');
     $message = '';
 
     switch ($action) {
@@ -55,62 +82,56 @@ class DoanhThuApi extends Controller
           $message = 'Bạn không có quyền thao tác';
           break;
         }
-
-        $tongtiendoanhthu = 0;
-        $dataChiTietDoanhThu = [];
+        
         foreach ($ids as $id) {
-          $hoahong = $this->hoaHongRepository->query()->where('id', $id)->first();
-          if (!$hoahong)
+          $nhanvien = $this->nhanVienRepository->query()->where('id', $id)->first();
+          if (!$nhanvien)
           {
             $message = 'Không tìm thấy dữ liệu vui lòng truy cập lại';
             break;
           }
-
-          if($hoahong->trangthai == 1)
+          if($nhanvien->trangthai == 0)
           {
-            $message = 'Hoa hồng <b>' .$hoahong->mota. '</b> đã được chốt';
+            $message = 'Nhân viên '.$nhanvien->tennhanvien. ' chưa được kích hoạt';
             break;
           }
+        }
+
+        $tongtiendoanhthu = 0;
+        $dataChiTietDoanhThu = [];
+        // Duyệt qua từng nhân viên
+        foreach ($ids as $id) {
+          $nhanvien = $this->nhanVienRepository->query()->where('id', $id)->first();
           // Tính tiền cho nhân viên
-          $hoahong->trangthai = 1;
-          $hoahong->save();
-          $giatrihoahong = $hoahong->giatri;
-          $nhanvien = $hoahong->nhanvien;
-          $nhanvien->soduthucte = ($nhanvien->soduthucte + $giatrihoahong);
-          $nhanvien->hoahongtamtinh = ($nhanvien->hoahongtamtinh - $giatrihoahong);
+          $hoahongtamtinh = $nhanvien->hoahongtamtinh;
+          $sotien = $hoahongtamtinh;
+          $nhanvien->soduthucte = $nhanvien->soduthucte + $hoahongtamtinh;
+          $nhanvien->hoahongtamtinh = 0;
           $nhanvien->save();
-          $tongtiendoanhthu += $giatrihoahong;
+          $tongtiendoanhthu += $hoahongtamtinh;
+
           array_push($dataChiTietDoanhThu, [
             'nhanvien_id' => $nhanvien->id,
-            'sotien' => $giatrihoahong,
+            'sotien' => $sotien,
             'created_at' => new DateTime,
             'updated_at' => new DateTime
           ]);
+          // dd($dataChiTietDoanhThu);
         }
 
-        // Lưu lại doanh thu
+        // Lưu lại bảng doanh thu
         $doanhthu = new DoanhThu;
         $doanhthu->sotien = $tongtiendoanhthu;
+        $doanhthu->maso = strtoupper(uniqid('DT'));
         $doanhthu->ngaychot = new DateTime;
         $doanhthu->nguoichot_id = getNhanVienID();
         $doanhthu->solanin = 0;
         $doanhthu->created_at = new DateTime;
         $doanhthu->updated_at = new DateTime;
         $doanhthu->save();
-        // Lưu lại chi tiết doanh thu
-        foreach ($dataChiTietDoanhThu as $chitiet) {
-          $check = ChiTietDoanhThu::where('nhanvien_id', $chitiet['nhanvien_id'])
-            ->where('doanhthu_id', $doanhthu->id)->first();
-          if($check)
-          {
-            $check->sotien = $check->sotien + $chitiet['sotien'];
-            $check->save();
-          }
-          else
-          {
-            $doanhthu->chitietdoanhthu()->create($chitiet);
-          }
-        }
+
+        // Lưu lại bảng chi tiết doanh thu
+         $doanhthu->chitietdoanhthu()->createMany($dataChiTietDoanhThu);
         
         $message = 'Chốt doanh thu thành công';
         break;

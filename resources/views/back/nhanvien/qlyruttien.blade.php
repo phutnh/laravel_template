@@ -3,6 +3,10 @@
 @endsection
 @section('scripts')
 <script>
+  $(document).ready(function(){
+    $('#table-data-content').DataTable();
+  });
+  
   $('#btnXem').click(function(){
             var startTime = $('#startDate').val();
             var endTime = $('#endDate').val();

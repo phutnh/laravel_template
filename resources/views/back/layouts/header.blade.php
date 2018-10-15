@@ -110,7 +110,7 @@
               {{ csrf_field() }}
             </form>
             <div class="dropdown-divider"></div>
-            <div class="p-l-30 p-10"><a href="javascript:void(0)" class="btn btn-sm btn-success btn-rounded">View Profile</a></div>
+            <div class="p-l-30 p-10"><a href="{{ route('user.profile.view') }}" class="btn btn-sm btn-success btn-rounded">View Profile</a></div>
           </div>
         </li>
       </ul>
@@ -129,7 +129,8 @@
         <li class="sidebar-item">
           <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-receipt"></i><span class="hide-menu">Quản lý doanh thu</span></a>
           <ul aria-expanded="false" class="collapse  first-level">
-            <li class="sidebar-item"><a href="{{ route('admin.doanhthu.index') }}" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu">Danh sách doanh thu</span></a></li>
+            <li class="sidebar-item"><a href="{{ route('admin.doanhthu.thang') }}" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu">Doanh thu nhân viên</span></a></li>
+            <li class="sidebar-item"><a href="{{ route('admin.doanhthu.index') }}" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu">Doanh thu đã chốt</span></a></li>
             <li class="sidebar-item"><a href="{{ route('admin.doanhthu.action') }}" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu">Chốt doanh thu</span></a></li>
           </ul>
         </li>
@@ -146,8 +147,7 @@
           <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-face"></i><span class="hide-menu">Báo cáo</span></a>
           <ul aria-expanded="false" class="collapse  first-level">
             <li class="sidebar-item"><a href="icon-material.html" class="sidebar-link"><i class="mdi mdi-emoticon"></i><span class="hide-menu"> Doanh thu tháng </span></a></li>
-            <li class="sidebar-item"><a href="icon-fontawesome.html" class="sidebar-link"><i class="mdi mdi-emoticon-cool"></i><span class="hide-menu"> Lịch sử nhận hoa hồng </span></a></li>
-            <li class="sidebar-item"><a href="icon-fontawesome.html" class="sidebar-link"><i class="mdi mdi-emoticon-cool"></i><span class="hide-menu"> </span></a></li>
+            <li class="sidebar-item"><a href="{{ route('admin.commission.history') }}" class="sidebar-link"><i class="mdi mdi-emoticon-cool"></i><span class="hide-menu"> Lịch sử nhận hoa hồng </span></a></li>
           </ul>
         </li>
         <li class="sidebar-item">
@@ -158,6 +158,7 @@
             <li class="sidebar-item"><a href="icon-fontawesome.html" class="sidebar-link"><i class="mdi mdi-emoticon-cool"></i><span class="hide-menu"> Lịch sử chi tiền </span></a></li>
           </ul>
         </li>
+        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('user.profile.view') }}" aria-expanded="false"><i class="mdi mdi-account-circle"></i><span class="hide-menu">Thông tin cá nhân</span></a></li>
       </ul>
     </nav>
   </div>

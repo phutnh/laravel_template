@@ -32,7 +32,7 @@ class HoaHongRepository extends BaseRepository
       $start_date = getFristDayOfMonth($start_date);
       $end_date = getLastDayOfMonth($end_date);
     }
-    // dd($start_date);
+
     $hoahong->whereDate('created_at', '>=', $start_date);
     $hoahong->whereDate('created_at', '<=', $end_date);
     $hoahong->select('hoahong.*');

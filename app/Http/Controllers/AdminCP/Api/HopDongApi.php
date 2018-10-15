@@ -49,6 +49,7 @@ class HopDongApi extends Controller
 
   public function update(HopDongRequest $request) {
     
+    $this->repository->updateHopDong($request);
     return responseFormData('Chỉnh sửa hợp đồng thành công');
   }
 
@@ -166,6 +167,12 @@ class HopDongApi extends Controller
     // Tính tiền trực tiếp
     $nhanvien->hoahongtamtinh = ($nhanvien->hoahongtamtinh + $hoahongtructiep);
     $nhanvien->save();
+    // Nếu chưa kích hoạt thì sẽ kích hoạt
+    if ($nhanvien->trangthai == 0){
+      $nhanvien->trangthai = 1;
+      $nhanvien->save();
+    }
+
     // Lưu hoa hồng nhân viên trực tiếp
     $level = 1;
     $this->hoaHongRepository->save([
@@ -185,30 +192,37 @@ class HopDongApi extends Controller
     $sotiendanhan = $hoahongtructiep;
     $flag = 1;
     $cayhoahong = $nhanvien->id.',';
-    $ancestorsNumber = (count($ancestors) - 1);
+    $oldNhanVien = $nhanvien;
     foreach ($ancestors as $act) {
-      if ($flag == 1)
+      // Nếu user được kích hoạt thì mời nhận
+      if($act->trangthai == 1) {
+        // Cộng thêm số tiền trực tiếp
+        if ($flag == 1)
+          $sotiendanhan += $hoahonggiantiep;
+        
+        $act->hoahongtamtinh = ($act->hoahongtamtinh + $hoahonggiantiep);
+        $act->save();
+        // Lưu hoa hồng nhân viên gián tiếp
+        $mota = 'Nhận tiền hoa hồng gián tiếp từ nhân viên '.$oldNhanVien->tennhanvien. '['.$oldNhanVien->manhanvien.'] thông qua hợp đồng ' .$hopdong->sohopdong;
+        $this->hoaHongRepository->save([
+          'loaihoahong' => 'Gián tiếp',
+          'mota' => $mota,
+          'nhanvien_id' => $act->id,
+          'giatri' => $hoahonggiantiep,
+          'hopdong_id' => $hopdong->id,
+          'cayhoahong' => rtrim($cayhoahong, ','),
+          'created_at' => new DateTime,
+          'trangthai' => 0
+        ]);
+        $hoahonggiantiep = $hoahonggiantiep * ($thamsogiantiep / 100);
+        // Cộng thêm số tiền gián tiếp
         $sotiendanhan += $hoahonggiantiep;
-      $act->hoahongtamtinh = ($act->hoahongtamtinh + $hoahonggiantiep);
-      $act->save();
-      // Lưu hoa hồng nhân viên gián tiếp
-      $mota = 'Nhận tiền hoa hồng gián tiếp từ nhân viên '.$act->tennhanvien. '['.$act->manhanvien.'] thông qua hợp đồng ' .$hopdong->sohopdong;
-      $this->hoaHongRepository->save([
-        'loaihoahong' => 'Gián tiếp',
-        'mota' => $mota,
-        'nhanvien_id' => $act->id,
-        'giatri' => $hoahonggiantiep,
-        'hopdong_id' => $hopdong->id,
-        'cayhoahong' => rtrim($cayhoahong, ','),
-        'created_at' => new DateTime,
-        'trangthai' => 0
-      ]);
-      $hoahonggiantiep = $hoahonggiantiep * ($thamsogiantiep / 100);
-      $sotiendanhan += $hoahonggiantiep;
-      $cayhoahong .= $act->id . ',';
-      if (intval($hoahonggiantiep) == 0)
-        break;
-      $flag++;
+        $oldNhanVien = $act;
+        $cayhoahong .= $act->id . ',';
+        if (intval($hoahonggiantiep) == 0)
+          break;
+        $flag++;
+      }
     }
 
     // Tính phần tiền đã nhận được của hợp đồng

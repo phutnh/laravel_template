@@ -28,12 +28,14 @@ $(document).ready(function() {
         showFormError(response.responseJSON);
       }
       $('#ajax-messases-loading').css({ "display": "none" });
+      $('#button-create').attr('disabled', false);
     },
     beforeSerialize: function($form, options) {
     },
     beforeSubmit: function(arr, $form, options) {
       $('#send-process').width('0%');
       $('#ajax-messases-loading').css({ "display": "block" });
+      $('#button-create').attr('disabled', true);
     },
     resetForm: true,
     uploadProgress: function(event, position, total, percentComplete) {
@@ -71,12 +73,14 @@ $(document).ready(function() {
         showFormError(response.responseJSON);
       }
       $('#ajax-messases-loading').css({ "display": "none" });
+      $('#button-update').attr('disabled', false);
     },
     beforeSerialize: function($form, options) {
     },
     beforeSubmit: function(arr, $form, options) {
       $('#send-process').width('0%');
       $('#ajax-messases-loading').css({ "display": "block" });
+      $('#button-update').attr('disabled', true);
     },
     uploadProgress: function(event, position, total, percentComplete) {
       percentVal = percentComplete + '%';

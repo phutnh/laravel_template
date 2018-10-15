@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ThamSo;
 use App\Http\Requests\DemoRequest;
+use Session;
 use DB;
 
 class ThamSoController extends Controller
@@ -23,12 +24,7 @@ class ThamSoController extends Controller
         $template['form-datatable'] = true;
         $template['breadcrumbs'] = [
             [
-                'name' => 'Tham số hoa hồng',
-                'link' => route('admin.thamso.index'),
-                'active' => false
-            ],
-            [
-                'name' => 'Danh sách',
+                'name' => 'Danh sách tham số hoa hồng',
                 'link' => '',
                 'active' => true
             ],
@@ -42,7 +38,7 @@ class ThamSoController extends Controller
         $template['form-datatable'] = true;
         $template['breadcrumbs'] = [
             [
-                'name' => 'Thay đổi tham số hoa hồng',
+                'name' => 'Danh sách tham số hoa hồng',
                 'link' => route('admin.thamso.index'),
                 'active' => false
             ],
@@ -57,21 +53,7 @@ class ThamSoController extends Controller
     }
     
     public function action(Request $request, $id){
-        $template = $this->template;
-        $template['form-datatable'] = true;
-        $template['breadcrumbs'] = [
-            [
-                'name' => 'Thay đổi tham số hoa hồng',
-                'link' => route('admin.thamso.index'),
-                'active' => false
-            ],
-            [
-                'name' => 'Thay đổi',
-                'link' => '',
-                'active' => true
-            ],
-        ];
-        
+
         $this->validate($request,[
             'txttenthamso'      => 'required',
             'txtthongtinthamso' => 'required',
@@ -90,6 +72,8 @@ class ThamSoController extends Controller
         $thamso -> mota = $request->txtthongtinthamso;
         $thamso -> timestamps = false;
         $thamso -> save();
+        
+        session()->flash('success','Bạn đã thay đổi thành công giá trị tham số !');
         return redirect()->route('admin.thamso.index',compact('template'));
         
     }

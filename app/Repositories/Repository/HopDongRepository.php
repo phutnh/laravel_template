@@ -19,12 +19,24 @@ class HopDongRepository extends BaseRepository
       $hopdong->where('id', $request->notify_id);
     if (getQuyenNhanVien() != 1)
       $hopdong->where('nhanvien_id', getNhanVienID());
-    
+    $start_date = $request->start_date;
+    $end_date = $request->end_date;
+    if ($start_date && $end_date) {
+      $start_date = formatDateSqlData($start_date);
+      $end_date = formatDateSqlData($end_date);
+    }
+    else {
+      $start_date = getFristDayOfMonth($start_date);
+      $end_date = getLastDayOfMonth($end_date);
+    }
+
+    $hopdong->whereDate('created_at', '>=', $start_date);
+    $hopdong->whereDate('created_at', '<=', $end_date);
+    $trangthai = $request->trangthai;
+    if($trangthai != 'all')
+      $hopdong->where('trangthai', $trangthai);
+
     $hopdong->where('deleted', 0);
-    // if (getQuyenNhanVien() == '1') {
-    //   $hopdong->where('trangthai', '<>', 'Chưa gửi');
-    //   $hopdong->orWhere('nhanvien_id', getNhanVienID());
-    // }
     return $hopdong->get();
   }
 
@@ -35,17 +47,21 @@ class HopDongRepository extends BaseRepository
       'sodienthoai', 'email', 'diachi'
     ]);
 
-    $listFile = '';
+    if($request->file('dinhkem'))
+    {
+      $listFile = '';
 
-    foreach ($request->dinhkem as $file) {
-      $listFile .= uploadFileData($file, 'uploads/hopdong') . '|';
+      foreach ($request->dinhkem as $file) {
+        $listFile .= uploadFileData($file, 'uploads/hopdong') . '|';
+      }
+      $data['dinhkem'] = rtrim($listFile, '|');
     }
-
+    
     $data['nhanvien_id'] = getNhanVienID();
-    $data['dinhkem'] = rtrim($listFile, '|');
+    
     $data['trangthai'] = 'Chưa gửi';
     $data['created_at'] = new DateTime;
-
+    $data['updated_at'] = new DateTime;
     $this->create($data);
   }
 
@@ -56,9 +72,20 @@ class HopDongRepository extends BaseRepository
       'sodienthoai', 'email', 'diachi'
     ]);
 
+    if($request->file('dinhkem'))
+    {
+      $listFile = '';
+
+      foreach ($request->dinhkem as $file) {
+        $listFile .= uploadFileData($file, 'uploads/hopdong') . '|';
+      }
+      
+      $hopdong = $this->find($request->id);
+      $data['dinhkem'] = $hopdong->dinhkem .'|'. rtrim($listFile, '|');
+    }
+    
     $data['nhanvien_id'] = getNhanVienID();
     $data['updated_at'] = new DateTime;
-
     $this->update($data, $request->id);
   }
 }

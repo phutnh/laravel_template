@@ -19,14 +19,18 @@ Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'a
     Route::post('/action/{id}', 'ThamSoController@action')->name('admin.thamso.action');
   });
 
+  // profile developer TinhNT11
+  Route::group(['prefix' => 'thong-tin-ca-nhan'], function() {
+    Route::get('/', 'ProfileController@view')->name('user.profile.view');
+    Route::get('/update/{id}', 'ProfileController@update')->name('user.profile.update');
+    Route::post('/action/{id}', 'ProfileController@action')->name('user.profile.action');
+  });
   
   // Add start ThangTGM 20181009: Quản lý nhân sự
   Route::group(['prefix' => 'nhansu'], function() {
     Route::get('/', 'AdminController@lstQLNS')->name('admin.qlnhansu');
     // Chờ ku Tính xong sẽ kế thừa
-    // profile developer TinhNT11
-    Route::get('/thong-tin-nhan-su/{id}', 'ProfileController@view')->name('admin.profile.view');
-    // -------------------------
+    
     
     Route::get('/detail', 'AdminController@createNS')->name('admin.qlnhansu.create');
     Route::get('/create', 'AdminController@createNS')->name('admin.qlnhansu.create');
@@ -40,6 +44,10 @@ Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'a
     Route::get('/applytrans', 'AdminController@applytrans')->name('admin.trans.applytrans');
     Route::post('/applytransAction', 'AdminController@applytransAction')->name('admin.applytrans.action');
     Route::post('/applytransSearch', 'AdminController@applytransSearch')->name('admin.applytrans.search');
+    
+    Route::get('/commissionHis', 'AdminController@commissionHis')->name('admin.commission.history');
+    Route::post('/commissionSearch', 'AdminController@commissionSearch')->name('admin.commission.search');
+    Route::post('/commissionTree', 'AdminController@commissionTree')->name('admin.commission.tree');
   });
   // Add end
   
@@ -49,14 +57,14 @@ Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'a
     Route::get('/them-moi', 'HopDongController@create')->name('admin.hopdong.create');
     Route::get('/chinh-sua/{id}', 'HopDongController@update')->name('admin.hopdong.update'); 
   });
-
+  
   // Route doanh thu
   Route::group(['prefix' => 'doanh-thu'], function() {
-    Route::get('/', 'DoanhThuController@index')->name('admin.doanhthu.index');
+    Route::get('/danh-sach-da-chot', 'DoanhThuController@doanhThuDaChot')->name('admin.doanhthu.index');
     Route::get('/chot-doanh-thu', 'DoanhThuController@action')->name('admin.doanhthu.action');
     Route::get('/chi-tiet/{id}', 'DoanhThuController@detail')->name('admin.doanhthu.detail');
+    Route::get('/danh-sach-thang', 'DoanhThuController@doanhThuThang')->name('admin.doanhthu.thang');
   });
-  
   
   // API Request action
   Route::group(['prefix' => 'api', 'namespace' => 'Api'], function() {
@@ -70,7 +78,9 @@ Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'a
 
   Route::group(['prefix' => 'api', 'namespace' => 'Api'], function() {
     Route::group(['prefix' => 'doanh-thu'], function() {
-      Route::post('/all', 'DoanhThuApi@all')->name('api.doanhthu.all');
+      Route::post('/doanhThuDaChot', 'DoanhThuApi@danhThuDaChot')->name('api.doanhthu.dachot');
+      Route::post('/doanhThuThang', 'DoanhThuApi@doanhThuThang')->name('api.doanhthu.thang');
+      Route::post('/data', 'DoanhThuApi@dataChotDoanhThu')->name('api.doanhthu.data');
       Route::post('/action', 'DoanhThuApi@actionData')->name('api.doanhthu.action');
     });
   });

@@ -1,4 +1,13 @@
 @extends('back.layouts.app')
+@section('styles')
+@endsection
+@section('scripts')
+<script type="text/javascript">
+  $(function() {
+     $('#flash').delay(2500).fadeOut(800);
+  });
+</script>
+@endsection
 
 @section('content')
 <div class="container-fluid">
@@ -6,6 +15,11 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-body">
+          @if (session()->has('success'))
+           <div class="alert alert-success" role="alert" id="flash">
+              <i class="mdi mdi-check"></i> {{session()->get('success')}}
+           </div>
+          @endif
           <div class="block-header">
             <h5 class="card-title">Danh sách tham số hoa hồng</h5>
             <div class="block-tool">
@@ -13,9 +27,6 @@
             </div>
           </div>
           <div class="col-md-12">
-            @if($flash = session('message'))
-              <span>{{ $flash }}</span>
-            @endif
           </div>
           <table id="table-data-content" class="table table-striped table-bordered">
             <thead>
@@ -35,7 +46,7 @@
                     <td data-toggle="tooltip" data-placement="top" title="{{ $thamso1->mota }}">{{ str_limit($thamso1->mota, 50) }}</td>
                     <td>{{ $thamso1->giatrithamso }}</td>
                     <td>
-                      <a href="{{ route('admin.thamso.update',$thamso1->id) }}" type="button" class="btn btn-info btn-sm">
+                      <a href="{{ route('admin.thamso.update',$thamso1->id) }}" class="btn btn-info btn-sm">
                               <i class="mdi mdi-table-edit"></i> Edit
                       </a>
                       <!--<a type="button" class="btn btn-danger btn-sm" data-id="{{ $thamso1->id}}">-->

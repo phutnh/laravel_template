@@ -1,7 +1,16 @@
+var start_date = $("#start-date").val();
+var end_date = $("#end-date").val();
+var trangthai = $("#trangthai option:selected").val();
+
 optionsDataTable = {
   "ajax": {
     url: apiData,
     "type": "POST",
+    data: function (d) {
+      d.start_date = start_date,
+      d.end_date = end_date,
+      d.trangthai = trangthai
+    },
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
@@ -37,6 +46,9 @@ optionsDataTable = {
       "data": "trangthai"
     },
     {
+      "data": "email"
+    },
+    {
       "data": "action",
       "orderable": false,
       "searchable": false
@@ -58,10 +70,11 @@ optionsDataTable = {
     }
   }],
   'order': [2, 'asc'],
-  responsive: true
 };
 
 table = $('#table-data-content').DataTable(optionsDataTable);
+// table.columns( [7] ).visible( false );
+// table.columns.adjust().draw( false );
 
 $('#ckb-select-all').on('click', function() {
   var rows = table.rows({
@@ -135,6 +148,7 @@ $("#form-data-hopdong").ajaxForm({
       table.ajax.reload();
 
     } else {}
+    
     $('#ajax-messases-loading').css({ "display": "none" });
 
   },
@@ -162,4 +176,17 @@ $('#form-data-hopdong').on('submit', function(e) {
 
   e.preventDefault();
 
+});
+
+
+$("#btn-search").click(function() {
+  start_date = $("#start-date").val();
+  end_date = $("#end-date").val();
+  trangthai = $("#trangthai option:selected").val();
+  if(!start_date && !end_date)
+  {
+    $("#start-date").val($("#start-date").data('init'));
+    $("#end-date").val($("#end-date").data('init'));
+  }
+  table.ajax.reload();
 });

@@ -248,4 +248,88 @@ class AdminController extends Controller
     
     return response()->json(['lstTrans' => $lstTrans]);
   }
+  
+  public function commissionHis(){
+    $template['title'] = 'Quản lý';
+    $template['title-breadcrumb'] = '';
+    $template['breadcrumbs'] = [
+      [
+        'name' => 'Quản lý lịch sử hoa hồng',
+        'link' => '',
+        'active' => true
+      ]
+    ];
+    
+    $nv_id = getNhanVienID();
+    $ma_quyen = getQuyenNhanVien();
+    
+    // Lấy ra ds các lịch sử hoa hồng trong tháng
+    $sql = "SELECT a.*, b.tennhanvien, d.tenhopdong FROM hoahong a, nhanvien b, hopdong d ";
+    $sql .= "WHERE a.nhanvien_id = b.id ";
+    $sql .= "and a.hopdong_id = d.id ";
+    $sql .= "and DATE_FORMAT(a.created_at, '%Y%m') >= DATE_FORMAT(NOW(), '%Y%m') ";
+    $sql .= "and DATE_FORMAT(a.created_at, '%Y%m') <= DATE_FORMAT(NOW(), '%Y%m') ";
+    
+    if($ma_quyen != 1){
+      $sql .= "and a.nhanvien_id = '$nv_id' ";
+    }
+    
+    $sql .= "order by a.created_at asc";
+    $template['lstTrans'] = DB::select($sql);
+    
+    return view('back.nhanvien.qlylichsuhoahong', compact('template'));
+  }
+  
+  public function commissionSearch(Request $request){
+    $startTime = $request->startTime;
+    $endTime = $request->endTime;
+    $loaihoahong = $request->loaihoahong;
+    
+    //Chuyển đổi định dạng ngày tháng
+    $startTime = date_create($startTime);
+		$startTime = date_format($startTime, 'Ymd');
+		$endTime = date_create($endTime);
+		$endTime = date_format($endTime, 'Ymd');
+    
+    $nv_id = getNhanVienID();
+    $ma_quyen = getQuyenNhanVien();
+    
+    // Lấy ra ds các lịch sử hoa hồng theo mốc thời gian
+    $sql = "SELECT b.tennhanvien, a.loaihoahong, a.hopdong_id, d.tenhopdong, format(a.giatri, '#,##0') as tonghh, a.created_at, a.trangthai, '<button>DUYỆT</button>' as chucnang FROM hoahong a, nhanvien b, hopdong d ";
+    $sql .= "WHERE DATE_FORMAT(a.created_at, '%Y%m%d') >= '$startTime' ";
+    $sql .= "and DATE_FORMAT(a.created_at, '%Y%m%d') <= '$endTime' ";
+    $sql .= "and a.nhanvien_id = b.id ";
+    $sql .= "and a.hopdong_id = d.id ";
+    
+    if($loaihoahong != "all"){
+      $sql .= "and a.loaihoahong = '$loaihoahong' ";
+    }
+    
+    if($ma_quyen != 1){
+      $sql .= "and a.nhanvien_id = '$nv_id' ";
+    }
+    
+    
+    $sql .= "order by a.created_at asc";
+    $lstTrans = DB::select($sql);
+    
+    return response()->json(['lstTrans' => $lstTrans]);
+  }
+  
+  public function commissionTree(Request $request){
+    $ma_hd = $request->ma_hd;
+    
+    $nv_id = getNhanVienID();
+    $ma_quyen = getQuyenNhanVien();
+    
+    // Lấy ra ds các lịch sử hoa hồng theo mốc thời gian
+    $sql = "SELECT b.tennhanvien, a.loaihoahong, a.hopdong_id, d.tenhopdong, format(a.giatri, '#,##0') as tonghh, a.created_at, a.nhanvien_id FROM hoahong a, nhanvien b, hopdong d ";
+    $sql .= "WHERE a.hopdong_id = '$ma_hd' ";
+    $sql .= "and a.nhanvien_id = b.id ";
+    $sql .= "and a.hopdong_id = d.id ";
+    $sql .= "ORDER BY CHAR_LENGTH( a.cayhoahong ) ASC ";
+    $lstHH = DB::select($sql);
+    
+    return response()->json(['lstHH' => $lstHH, 'nv_id' => $nv_id]);
+  }
 }
