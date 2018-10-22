@@ -21,7 +21,7 @@ apiData = "{{ route('api.doanhthu.data') }}";
             <form action="{{ route('api.doanhthu.action') }}" method="post" id="form-data-doanhthu">
             {{ csrf_field() }}
             <div class="block-header">
-              <h5 class="card-title">Chốt doanh thu</h5>
+              <h5 class="card-title">Chốt doanh thu tháng</h5>
               <div class="block-tool">
                 <button class="btn btn-info btn-sm" name="action" value="approve" type="submit"><i class="mdi mdi-marker-check"></i> Chốt doanh thu</button>
               </div>
@@ -30,16 +30,12 @@ apiData = "{{ route('api.doanhthu.data') }}";
               <table id="table-data-content" class="table table-striped table-bordered">
                 <thead>
                   <tr>
-                    <th width="15" nowrap>
-                      <label class="mc-container">&nbsp;
-                        <input type="checkbox" value="all" id="ckb-select-all">
-                        <span class="mc-checkmark"></span>
-                      </label>
+                    <th width="15">
                     </th>
-                    <th nowrap>Mã nhân viên</th>
-                    <th nowrap>Tên nhân viên</th>
-                    <th nowrap>Email</th>
-                    <th nowrap>Số tiền</th>
+                    <th>Mã nhân viên</th>
+                    <th>Tên nhân viên</th>
+                    <th>Email</th>
+                    <th>Số tiền</th>
                   </tr>
                 </thead>
               </table>

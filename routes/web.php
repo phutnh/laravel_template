@@ -73,12 +73,13 @@ Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'a
       Route::post('/create', 'HopDongApi@create')->name('api.hopdong.create');
       Route::post('/update/{id}', 'HopDongApi@update')->name('api.hopdong.update');
       Route::post('/action', 'HopDongApi@actionData')->name('api.hopdong.action');
+      Route::post('/removeImage', 'HopDongApi@removeImage')->name('api.hopdong.remove.image');
     });
   });
 
   Route::group(['prefix' => 'api', 'namespace' => 'Api'], function() {
     Route::group(['prefix' => 'doanh-thu'], function() {
-      Route::post('/doanhThuDaChot', 'DoanhThuApi@danhThuDaChot')->name('api.doanhthu.dachot');
+      Route::post('/doanhThuDaChot', 'DoanhThuApi@doanhThuDaChot')->name('api.doanhthu.dachot');
       Route::post('/doanhThuThang', 'DoanhThuApi@doanhThuThang')->name('api.doanhthu.thang');
       Route::post('/data', 'DoanhThuApi@dataChotDoanhThu')->name('api.doanhthu.data');
       Route::post('/action', 'DoanhThuApi@actionData')->name('api.doanhthu.action');

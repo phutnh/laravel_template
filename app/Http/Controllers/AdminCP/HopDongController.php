@@ -71,6 +71,8 @@ class HopDongController extends Controller
     ];
 
     $hopdong = $this->repository->find($id);
+    if($hopdong->nhanvien_id != getNhanVienID() && $hopdong->trangthai == 'Chưa gửi')
+      return redirect()->back();
     if($hopdong->nhanvien_id != getNhanVienID() && getQuyenNhanVien() != 1)
       return redirect()->back();
 

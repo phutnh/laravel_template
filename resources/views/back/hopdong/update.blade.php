@@ -3,7 +3,6 @@
 @endsection
 @section('scripts')
 <script src="{{ asset(config('setting.admin.path_js') . 'bootstrap-fileselect.js') }}"></script>
-<script src="{{ asset(config('setting.admin.path_js') . 'jquery.number.js') }}"></script>
 <script>
 $('#dinhkem').fileselect({
   allowedFileExtensions: ['jpg', 'jpge', 'pdf', 'png', 'doc', 'docx'],
@@ -13,7 +12,6 @@ $('#dinhkem').fileselect({
     .after('<span class="small text-danger">' + m + '</span>');
   }
 });
-$("#giatri").number(true, 0);
 $("#form-action-detail").ajaxForm({
   complete: function(response) {
     if (response.status == 200) {
@@ -42,6 +40,26 @@ $("#form-action-detail").ajaxForm({
     if (!confirm("Bạn có chắc chắn chọn thao tác này không !"))
       return false;
   },
+});
+
+$(".btn-remove-image").click(function() {
+  if(!confirm('Bạn có chắc chắn muốn xóa đính kèm này không'))
+    return false;
+  action = $(this).data('action');
+  $.ajax({
+    url: action,
+    type: "POST",
+    data: {
+      hopdong_id: $(this).data('id'),
+      file_name: $(this).data('file')
+    },
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    success: function() {
+      window.location.reload();
+    }
+  });
 });
 </script>
 @endsection
@@ -119,7 +137,7 @@ $("#form-action-detail").ajaxForm({
             <div class="form-group row">
               <label class="col-md-2 control-label col-form-label">Giá trị hợp đồng</label>
               <div class="col-md-10 mc-form-input">
-                <input type="text" class="form-control" name="giatri" id="giatri" placeholder="Giá trị hợp đồng" value="{{ $hopdong->giatri }}" {{ $readonly }}>
+                <input type="number" class="form-control" name="giatri" id="giatri" placeholder="Giá trị hợp đồng" value="{{ $hopdong->giatri }}" {{ $readonly }}>
               </div>
             </div>
             <div class="form-group row">
@@ -130,7 +148,7 @@ $("#form-action-detail").ajaxForm({
             </div>
             <div class="form-group row">
               <div class="col-md-2"></div>
-              <div class="col-md-10 mc-form-input">
+              <div class="col-md-10 mc-form-input" style="clear: both;">
               @php
               $files = $hopdong->dinhkem;
               $files = explode('|', $files);
@@ -140,8 +158,15 @@ $("#form-action-detail").ajaxForm({
                 @php
                 $filetype = explode('.', $file);
                 @endphp
-                <a class="document-item" href="uploads/hopdong/{{ $file }}" filetype="{{ $filetype[1] }}">
-                <span class="fileCorner"></span>Chi tiết</a>
+                <div class="mc-list-file">
+                  <a class="document-item" href="uploads/hopdong/{{ $file }}" filetype="{{ $filetype[1] }}">
+                    <span class="fileCorner"></span>Chi tiết
+                    <input type="hidden" name="hopdong_id" value="{{ $hopdong->id }}">
+                  </a>
+                  @if ($canUpdate)
+                  <button type="button" class="btn-remove-image" data-id="{{ $hopdong->id }}" data-file="{{ $file }}" data-action="{{ route('api.hopdong.remove.image') }}">x</button>
+                  @endif
+                </div>
                 @endforeach
               @endif
               </div>

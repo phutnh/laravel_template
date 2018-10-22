@@ -4,8 +4,7 @@
 @section('scripts')
 <script src="{{ asset(config('setting.admin.path_js') . 'jquery.inputmask.min.js') }}"></script>
 <script>
-$(".date-inputmask").inputmask("dd/mm/yyyy");
-$('.date-inputmask').keypress(function (event) {
+$('.datepicker-autoclose').keypress(function (event) {
  if (event.keyCode === 10 || event.keyCode === 13) {
    event.preventDefault();
  }
@@ -60,43 +59,42 @@ apiData = '{{ route('api.hopdong.all') }}';
                   <div class="input-group-prepend">
                     <div class="input-group-text">Thời gian bắt đầu</div>
                   </div>
-                  <input type="text" class="form-control date-inputmask" id="start-date" placeholder="Thời gian bắt đầu" value="{{ formatDateData(getFristDayOfMonth()) }}" data-init="{{ formatDateData(getFristDayOfMonth()) }}">
+                  <input type="date" class="form-control" id="start-date" placeholder="Thời gian bắt đầu" value="{{ getFristDayOfMonth() }}" data-init="{{ getFristDayOfMonth() }}">
                 </div>
                 <div class="input-group mb-2 mr-sm-2">
                   <div class="input-group-prepend">
                     <div class="input-group-text">Thời gian kết thúc</div>
                   </div>
-                  <input type="text" class="form-control date-inputmask" id="end-date" placeholder="Thời gian kết thúc" value="{{ formatDateData(getLastDayOfMonth()) }}" data-init="{{ formatDateData(getLastDayOfMonth()) }}">
+                  <input type="date" class="form-control" id="end-date" placeholder="Thời gian kết thúc" value="{{ getLastDayOfMonth() }}" data-init="{{ getLastDayOfMonth() }}">
                 </div>
                 <div class="input-group mb-2">
                   <div class="input-group-prepend">
                     <div class="input-group-text btn btn-success" id="btn-search">
                     <i class="fas fa-search m-r-10"></i>Lọc
                   </div>
-                  <input type="text" hidden id="title-filter-none" data-start="{{ formatDateData(getFristDayOfMonth()) }}" data-end="{{ formatDateData(getLastDayOfMonth()) }}">
-                  </div>
                 </div>
               </div>
+            </div>
               <hr style="clear: both;">
               <div class="table-responsive">
                  <table id="table-data-content" class="table table-striped table-bordered">
                     <thead>
                        <tr>
-                          <th width="auto" nowrap></th>
-                          <th width="15" nowrap>
+                          <th width="auto"></th>
+                          <th width="15">
                              <!--<input name="select_all" value="all" id="ckb-select-all" type="checkbox" />-->
                              <label class="mc-container">&nbsp;
                              <input type="checkbox" value="all" id="ckb-select-all">
                              <span class="mc-checkmark"></span>
                              </label>
                           </th>
-                          <th nowrap>Số hợp đồng</th>
-                          <th nowrap>Tên hợp đồng</th>
-                          <th nowrap>Khách hàng</th>
-                          <th nowrap>Giá trị</th>
-                          <th nowrap>Trạng thái</th>
-                          <th nowrap>Email</th>
-                          <th width="auto" nowrap>Công cụ</th>
+                          <th>Số hợp đồng</th>
+                          <th>Tên hợp đồng</th>
+                          <th>Khách hàng</th>
+                          <th>Giá trị</th>
+                          <th>Trạng thái</th>
+                          <th>Email</th>
+                          <th width="auto">Công cụ</th>
                        </tr>
                     </thead>
                  </table>

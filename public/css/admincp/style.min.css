@@ -16115,7 +16115,7 @@ td.details-control {
 .document-item {
   position: relative;
   padding-left: 30px;
-  padding-right: 20px;
+  padding-right: 0px;
   color: black;
   margin-left: 10px;
   display: inline-block;

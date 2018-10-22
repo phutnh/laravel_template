@@ -167,9 +167,10 @@ $(function() {
 
     $(".select2").select2();
 
-    $('#datepicker-autoclose').datepicker({
+    $('.datepicker-autoclose').datepicker({
         autoclose: true,
-        todayHighlight: true
+        todayHighlight: true,
+        format: 'dd-mm-yyyy',
     });
 
     $("input").attr("autocomplete", "off");
@@ -251,4 +252,13 @@ function ValueCharjs(value, metadata){
 }
 ValueCharjs.prototype.toString = function(){
     return this.value;
+}
+
+
+function printDiv(divName){
+    var printContents = document.getElementById(divName).innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
 }

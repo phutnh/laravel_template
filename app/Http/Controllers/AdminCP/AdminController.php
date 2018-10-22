@@ -6,9 +6,23 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DemoRequest;
 use DB;
+use App\Repositories\Repository\HopDongRepository;
+use App\Repositories\Repository\NhanVienRepository;
+use App\Repositories\Repository\HoaHongRepository;
 
 class AdminController extends Controller
 {
+  protected $hopDongRepository = '';
+  protected $nhanVienRepository = '';
+  protected $hoaHongRepository = '';
+
+  public function __construct(HopDongRepository $hopDongRepository, NhanVienRepository $nhanVienRepository, HoaHongRepository $hoaHongRepository)
+  {
+    $this->hopDongRepository = $hopDongRepository;
+    $this->nhanVienRepository = $nhanVienRepository;
+    $this->hoaHongRepository = $hoaHongRepository;
+  }
+
   public function dashboard()
   {
     $template['title'] = 'Quản lý';
@@ -20,7 +34,27 @@ class AdminController extends Controller
         'active' => true
       ],
     ];
-    return view('back.index', compact('template'));
+
+    $data['soluongnhanvien'] = $this->nhanVienRepository
+      ->query()->count();
+    $danhSachHopDong = $this->hopDongRepository
+      ->query()->where('trangthai', 'Đã duyệt');
+    if (getQuyenNhanVien() != 1)
+      $danhSachHopDong->where('nhanvien_id', getNhanVienID());
+    
+    $danhSachHopDong->whereDate('created_at', '>=', getFristDayOfMonth());
+    $danhSachHopDong->whereDate('created_at', '<=', getLastDayOfMonth());
+
+    $data['danhsachhopdong'] = $danhSachHopDong->get();
+
+    $queryHopDong = $this->hopDongRepository
+      ->query()->where('deleted', 0);
+    if (!isAdminCP())
+      $queryHopDong->where('nhanvien_id', getNhanVienID());
+
+    $data['soluonghopdong'] =  $queryHopDong->count();
+
+    return view('back.index', compact('template', 'data'));
   }
 
   // Sample function post

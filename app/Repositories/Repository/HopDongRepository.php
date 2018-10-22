@@ -22,12 +22,12 @@ class HopDongRepository extends BaseRepository
     $start_date = $request->start_date;
     $end_date = $request->end_date;
     if ($start_date && $end_date) {
-      $start_date = formatDateSqlData($start_date);
-      $end_date = formatDateSqlData($end_date);
+      $start_date = $start_date;
+      $end_date = $end_date;
     }
     else {
-      $start_date = getFristDayOfMonth($start_date);
-      $end_date = getLastDayOfMonth($end_date);
+      $start_date = getFristDayOfMonth();
+      $end_date = getLastDayOfMonth();
     }
 
     $hopdong->whereDate('created_at', '>=', $start_date);

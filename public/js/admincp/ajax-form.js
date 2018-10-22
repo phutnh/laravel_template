@@ -93,6 +93,10 @@ $(document).ready(function() {
 
 
   function showFormError(responseText) {
+    $('html, body').animate({
+      scrollTop: 0
+    }, 1000);
+    
     resetFormError();
     dataFieldError = responseText;
     $.each(responseText, function(k, v) {

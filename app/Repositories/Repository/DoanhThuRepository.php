@@ -12,30 +12,26 @@ class DoanhThuRepository extends BaseRepository
   	return DoanhThu::class;
   }
 
-  public function danhThuDaChot($request)
+  public function doanhThuDaChot($request)
   {
-  	$doanhthu = $this->query()->with(['nguoichot'])->select('doanhthu.*');
+    $start_date = $request->start_date;
+  	$doanhthu = $this->query()->with(['nguoichot'])
+      ->where('thangchot', $start_date)
+      ->select('doanhthu.*');
   	return $doanhthu->get();
   }
 
   public function doanhThuThang($request)
   {
-  	$chitietdoanhthu = ChiTietDoanhThu::groupBy('nhanvien_id', 'doanhthu_id');
-  	$start_date = $request->start_date;
-    if ($start_date) {
-      $start_date = formatDateSqlData($start_date);
-    }
-    else {
-      $start_date = getFristDayOfMonth($start_date);
-    }
-
-    $end_date = date("Y-m-t", strtotime($start_date));
-    $chitietdoanhthu->with('nhanvien');
-    $chitietdoanhthu->with('doanhthu');
-    $chitietdoanhthu->whereDate('created_at', '>=', $start_date);
-    $chitietdoanhthu->whereDate('created_at', '<=', $end_date);
-    $chitietdoanhthu->selectRaw('nhanvien_id, doanhthu_id, sum(sotien) as sotiennv');
-
-  	return $chitietdoanhthu->get();
+    $start_date = $request->start_date;
+    $data = $this->query()
+      ->join('chitietdoanhthu', 'doanhthu.id', '=', 'chitietdoanhthu.doanhthu_id')
+      ->join('nhanvien', 'chitietdoanhthu.nhanvien_id', '=', 'nhanvien.id')
+      ->where('thangchot', $start_date)
+      ->select([
+        'doanhthu.thangchot', 'nhanvien.tennhanvien', 'chitietdoanhthu.sotien',
+        'nhanvien.manhanvien', 'nhanvien.sodidong'
+      ]);
+  	return $data;
   }
 }

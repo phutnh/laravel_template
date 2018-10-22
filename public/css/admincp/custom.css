@@ -120,4 +120,30 @@
     margin-bottom: 4px;
   }
 }
+
+input[type='number'] {
+  -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.btn-remove-image {
+  width: 21px;
+  height: 21px;
+  line-height: 10px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: red;
+  outline: none;
+}
+
+.mc-list-file {
+  display: block;
+  width: 120px;
+  float: left;
+}
 /*End phut*/

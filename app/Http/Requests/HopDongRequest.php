@@ -14,24 +14,28 @@ class HopDongRequest extends FormRequest
   public function rules()
   {
     $id = isset($this->id) ? ',sohopdong,' . $this->id : '';
-
-    return [
-      'sohopdong' => 'required|alpha_dash|unique:hopdong' . $id,
-      'tenhopdong' => 'required|min:5',
-      'giatri' => 'required|numeric|min:0',
-      'tenkhachhang' => 'required|min:3',
-      'sodienthoai' => 'required|min:10|max:11',
-      'email' => 'required|email',
-      'diachi' => 'required|min:5',
-      'dinhkem.*' => 'mimes:png,jpg,jpge,pdf,png,doc,docx'
-    ];
+    $rules = [];
+    $rules['sohopdong'] = 'required|regex:/^[A-Za-z0-9-_+]+$/|unique:hopdong' . $id;
+    $rules['tenhopdong'] = 'required|min:5';
+    $rules['giatri'] = 'required|numeric|min:0';
+    $rules['tenkhachhang'] = 'required|min:3';
+    $rules['sodienthoai'] = 'required|min:10|max:11';
+    $rules['email'] = 'required|email';
+    $rules['diachi'] = 'required|min:5';
+    if (isset($this->id)) {
+      $rules['dinhkem.*'] = 'nullable|mimetypes:image/jpeg,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf,image/png';
+    } else {
+      $rules['dinhkem.*'] = 'mimetypes:image/jpeg,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf,image/png';
+    }
+    
+    return $rules;
   }
 
   public function messages()
   {
     return [
       'sohopdong.required' => 'Vui lòng nhập số hợp đồng',
-      'sohopdong.alpha_dash' => 'Số hợp đồng chỉ có thể chứa chữ cái, số và dấu gạch ngang.',
+      'sohopdong.regex' => 'Số hợp đồng chỉ có thể chứa chữ cái, số và các ký tự - + _.',
       'sohopdong.unique' => 'Số hợp đồng vừa nhập đã tồn tại',
       'tenhopdong.required' => 'Vui lòng nhập tên hợp đồng',
       'tenhopdong.min' => 'Vui lòng nhập tên hợp đồng từ 5 ký tự',
@@ -48,7 +52,7 @@ class HopDongRequest extends FormRequest
       'email.email' => 'Email không hợp lệ',
       'diachi.required' => 'Vui lòng nhập địa chỉ',
       'diachi.min' => 'Địa chỉ phải từ 5 ký tự',
-      'dinhkem.*.mimes' => 'File đính kèm không hợp lệ'
+      'dinhkem.*.mimetypes' => 'File đính kèm không hợp lệ'
     ];
   }
 }

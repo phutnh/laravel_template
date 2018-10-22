@@ -26,12 +26,16 @@ class DoanhThuApi extends Controller
     $this->nhanVienRepository = $nhanVienRepository;
   }
 
-  public function danhThuDaChot(Request $request)
+  public function doanhThuDaChot(Request $request)
   {
-  	$doanhthu = $this->repository->danhThuDaChot($request);
+  	$doanhthu = $this->repository->doanhThuDaChot($request);
   	return Datatables::of($doanhthu)
       ->editColumn('ngaychot', function($model) {
         return formatDateTimeData($model->ngaychot);
+      })
+      ->editColumn('thangchot', function($model) {
+        $thangchot = explode('/', $model->thangchot);
+        return 'Tháng ' . $thangchot[1] .' - Năm ' . $thangchot[0];
       })
       ->addColumn('action', function($model) {
         $link = route('admin.doanhthu.detail', $model->id);
@@ -47,11 +51,8 @@ class DoanhThuApi extends Controller
   {
     $doanhthu = $this->repository->doanhThuThang($request);
     return Datatables::of($doanhthu)
-      ->editColumn('doanhthu.ngaychot', function($model) {
-        return formatDateTimeData($model->doanhthu->ngaychot);
-      })
-      ->editColumn('sotiennv', function($model) {
-        return formatMoneyData($model->sotiennv);
+      ->editColumn('sotien', function($model) {
+        return formatMoneyData($model->sotien);
       })
       ->make(true);
   }
@@ -82,26 +83,33 @@ class DoanhThuApi extends Controller
           $message = 'Bạn không có quyền thao tác';
           break;
         }
+
+        // Kiểm tra xem được phép chốt doanh thu chưa
+        $countHoaHong = $this->hoaHongRepository->query()
+          ->whereMonth('created_at', '=', date('m'))
+          ->where('trangthai', 0)->count();
         
-        foreach ($ids as $id) {
-          $nhanvien = $this->nhanVienRepository->query()->where('id', $id)->first();
-          if (!$nhanvien)
-          {
-            $message = 'Không tìm thấy dữ liệu vui lòng truy cập lại';
-            break;
-          }
-          if($nhanvien->trangthai == 0)
-          {
-            $message = 'Nhân viên '.$nhanvien->tennhanvien. ' chưa được kích hoạt';
-            break;
-          }
-        }
+        if ($countHoaHong > 0)
+        {
+          $message = '<b>Chưa đến ngày chốt doanh thu</b>';
+          break;
+        }  
+
+        // Update lại trạng thái hoa hồng
+        $listHoaHong = $this->hoaHongRepository->query()
+          ->where('trangthai', 0)
+          ->update([
+            'trangthai' => 1
+        ]);
+        
 
         $tongtiendoanhthu = 0;
         $dataChiTietDoanhThu = [];
+        $listNhanVien = $this->nhanVienRepository->query()->where('hoahongtamtinh', '>', 0)
+          ->where('trangthai', 1)
+          ->get();
         // Duyệt qua từng nhân viên
-        foreach ($ids as $id) {
-          $nhanvien = $this->nhanVienRepository->query()->where('id', $id)->first();
+        foreach ($listNhanVien as $nhanvien) {
           // Tính tiền cho nhân viên
           $hoahongtamtinh = $nhanvien->hoahongtamtinh;
           $sotien = $hoahongtamtinh;
@@ -120,10 +128,12 @@ class DoanhThuApi extends Controller
         }
 
         // Lưu lại bảng doanh thu
+        $thangchot = date('Y/m', strtotime('first day of last month'));
         $doanhthu = new DoanhThu;
         $doanhthu->sotien = $tongtiendoanhthu;
         $doanhthu->maso = strtoupper(uniqid('DT'));
         $doanhthu->ngaychot = new DateTime;
+        $doanhthu->thangchot = $thangchot;
         $doanhthu->nguoichot_id = getNhanVienID();
         $doanhthu->solanin = 0;
         $doanhthu->created_at = new DateTime;

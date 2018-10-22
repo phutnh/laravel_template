@@ -2,7 +2,7 @@
   <nav class="navbar top-navbar navbar-expand-md navbar-dark">
     <div class="navbar-header" data-logobg="skin5">
       <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
-      <a class="navbar-brand" href="index.html">
+      <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
         <b class="logo-icon p-l-10">
           <img src="{{ asset('css/admincp/icons/logo-icon.png') }}" alt="homepage" class="light-logo" />
         </b>
@@ -122,7 +122,7 @@
   <div class="scroll-sidebar">
     <nav class="sidebar-nav">
       <ul id="sidebarnav" class="p-t-30">
-        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="index.html" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Trang chủ</span></a></li>
+        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('admin.dashboard') }}" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Trang chủ</span></a></li>
         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('admin.thamso.index') }}" aria-expanded="false"><i class="mdi mdi-flower"></i><span class="hide-menu">Quản lý tham số hoa hồng</span></a></li>
         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('admin.qlnhansu') }}" aria-expanded="false"><i class="mdi mdi-chart-bar"></i><span class="hide-menu">Quản lý nhân viên</span></a></li>
         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('admin.hopdong.index') }}" aria-expanded="false"><i class="mdi mdi-chart-bubble"></i><span class="hide-menu">Quản lý hợp đồng</span></a></li>

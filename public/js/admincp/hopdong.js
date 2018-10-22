@@ -1,6 +1,6 @@
-var start_date = $("#start-date").val();
-var end_date = $("#end-date").val();
-var trangthai = $("#trangthai option:selected").val();
+start_date = $("#start-date").val();
+end_date = $("#end-date").val();
+trangthai = $("#trangthai option:selected").val();
 
 optionsDataTable = {
   "ajax": {
@@ -31,22 +31,22 @@ optionsDataTable = {
       "searchable": false
     },
     {
-      "data": "sohopdong"
+      "data": "sohopdong", className: "nowrap"
     },
     {
-      "data": "tenhopdong"
+      "data": "tenhopdong", className: "nowrap"
     },
     {
-      "data": "tenkhachhang"
+      "data": "tenkhachhang", className: "nowrap"
     },
     {
-      "data": "giatri"
+      "data": "giatri", className: "nowrap"
     },
     {
-      "data": "trangthai"
+      "data": "trangthai", className: "nowrap"
     },
     {
-      "data": "email"
+      "data": "email", className: "nowrap"
     },
     {
       "data": "action",

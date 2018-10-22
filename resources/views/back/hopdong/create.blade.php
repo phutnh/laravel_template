@@ -3,16 +3,14 @@
 @endsection
 @section('scripts')
 <script src="{{ asset(config('setting.admin.path_js') . 'bootstrap-fileselect.js') }}"></script>
-<script src="{{ asset(config('setting.admin.path_js') . 'jquery.number.js') }}"></script>
 <script>
 $('#dinhkem').fileselect({
-allowedFileExtensions: ['png', 'jpg', 'jpge', 'pdf', 'png', 'doc', 'docx'],
+allowedFileExtensions: ['jpg', 'jpge', 'pdf', 'png', 'doc', 'docx'],
 browseBtnClass: 'btn btn-info',
 validationCallback: function (m, type, instance) {
   $('#txt-error-file').html(m);
 }
 });
-$("#giatri").number(true, 0);
 </script>
 @endsection
 
@@ -65,7 +63,7 @@ $("#giatri").number(true, 0);
           <div class="form-group row">
             <label class="col-md-2 control-label col-form-label">Giá trị hợp đồng</label>
             <div class="col-md-10 mc-form-input">
-              <input type="text" class="form-control" name="giatri" id="giatri" placeholder="Giá trị hợp đồng">
+              <input type="number" min="0" class="form-control" name="giatri" id="giatri" placeholder="Giá trị hợp đồng">
             </div>
           </div>
           <div class="form-group row">

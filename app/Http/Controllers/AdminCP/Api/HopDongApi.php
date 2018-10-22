@@ -13,6 +13,7 @@ use App\Http\Requests\HopDongRequest;
 use App\Notifications\SendContractApprove;
 use App\Notifications\SendContractApproved;
 use App\Models\ThamSo;
+use DB;
 
 class HopDongApi extends Controller
 {
@@ -51,6 +52,32 @@ class HopDongApi extends Controller
     
     $this->repository->updateHopDong($request);
     return responseFormData('Chỉnh sửa hợp đồng thành công');
+  }
+
+  public function removeImage(Request $request)
+  {
+    $file_name = $request->file_name;
+    $hopdong_id = $request->hopdong_id;
+    $hopdong = $this->repository->query()->find($hopdong_id);
+
+    if ($hopdong) {
+
+      $path = public_path() . '/uploads/hopdong/' . $file_name;
+      if(file_exists($path))
+      {
+        @unlink($path);
+      }
+      // trường hợp file k tồn tại sẽ update lại database
+      $dinhkem = $hopdong->dinhkem;
+      $dinhkem = explode('|', $dinhkem);
+      $save_dinhkem = '';
+      foreach ($dinhkem as $dk) {
+        if ($dk != $file_name)
+          $save_dinhkem .= $dk . '|';
+      }
+      $hopdong->dinhkem = rtrim($save_dinhkem, '|');;
+      $hopdong->save();
+    }
   }
 
   public function actionData(Request $request)
@@ -96,6 +123,18 @@ class HopDongApi extends Controller
           $message = 'Bạn không có quyền thao tác';
           break;
         }
+
+        // Kiểm tra xem đã được chốt doanh thu chưa nếu chưa thì không được duyệt
+        $countHoaHong = $this->hoaHongRepository->query()
+          ->whereMonth('created_at', '<', date('m'))
+          ->where('trangthai', 0)->count();
+        $lastMonth = date('m-Y', strtotime('first day of last month'));
+        if ($countHoaHong > 0)
+        {
+          $message = 'Vui lòng chốt doanh thu của tháng <b>'.$lastMonth.'</b> để duyệt hợp đồng mới';
+          break;
+        }  
+        
         foreach ($ids as $id) {
           $hopdong = $this->repository->query()->where(['sohopdong' => $id])->first();
           if (!$hopdong)
@@ -174,7 +213,6 @@ class HopDongApi extends Controller
     }
 
     // Lưu hoa hồng nhân viên trực tiếp
-    $level = 1;
     $this->hoaHongRepository->save([
       'loaihoahong' => 'Trực tiếp',
       'mota' => 'Nhận tiền hoa hồng trực tiếp từ hợp đồng ' . $hopdong->sohopdong,
@@ -194,35 +232,35 @@ class HopDongApi extends Controller
     $cayhoahong = $nhanvien->id.',';
     $oldNhanVien = $nhanvien;
     foreach ($ancestors as $act) {
-      // Nếu user được kích hoạt thì mời nhận
-      if($act->trangthai == 1) {
-        // Cộng thêm số tiền trực tiếp
-        if ($flag == 1)
-          $sotiendanhan += $hoahonggiantiep;
-        
-        $act->hoahongtamtinh = ($act->hoahongtamtinh + $hoahonggiantiep);
-        $act->save();
-        // Lưu hoa hồng nhân viên gián tiếp
-        $mota = 'Nhận tiền hoa hồng gián tiếp từ nhân viên '.$oldNhanVien->tennhanvien. '['.$oldNhanVien->manhanvien.'] thông qua hợp đồng ' .$hopdong->sohopdong;
-        $this->hoaHongRepository->save([
-          'loaihoahong' => 'Gián tiếp',
-          'mota' => $mota,
-          'nhanvien_id' => $act->id,
-          'giatri' => $hoahonggiantiep,
-          'hopdong_id' => $hopdong->id,
-          'cayhoahong' => rtrim($cayhoahong, ','),
-          'created_at' => new DateTime,
-          'trangthai' => 0
-        ]);
-        $hoahonggiantiep = $hoahonggiantiep * ($thamsogiantiep / 100);
-        // Cộng thêm số tiền gián tiếp
+      // Nếu user được kích hoạt thì mới nhận
+      if($act->trangthai == 0)
+        break;
+      // Cộng thêm số tiền trực tiếp
+      if ($flag == 1)
         $sotiendanhan += $hoahonggiantiep;
-        $oldNhanVien = $act;
-        $cayhoahong .= $act->id . ',';
-        if (intval($hoahonggiantiep) == 0)
-          break;
-        $flag++;
-      }
+      
+      $act->hoahongtamtinh = ($act->hoahongtamtinh + $hoahonggiantiep);
+      $act->save();
+      // Lưu hoa hồng nhân viên gián tiếp
+      $mota = 'Nhận tiền hoa hồng gián tiếp từ nhân viên '.$oldNhanVien->tennhanvien. '['.$oldNhanVien->manhanvien.'] thông qua hợp đồng ' .$hopdong->sohopdong;
+      $this->hoaHongRepository->save([
+        'loaihoahong' => 'Gián tiếp',
+        'mota' => $mota,
+        'nhanvien_id' => $act->id,
+        'giatri' => $hoahonggiantiep,
+        'hopdong_id' => $hopdong->id,
+        'cayhoahong' => rtrim($cayhoahong, ','),
+        'created_at' => new DateTime,
+        'trangthai' => 0
+      ]);
+      $hoahonggiantiep = $hoahonggiantiep * ($thamsogiantiep / 100);
+      // Cộng thêm số tiền gián tiếp
+      $sotiendanhan += $hoahonggiantiep;
+      $oldNhanVien = $act;
+      $cayhoahong .= $act->id . ',';
+      if (intval($hoahonggiantiep) == 0)
+        break;
+      $flag++;
     }
 
     // Tính phần tiền đã nhận được của hợp đồng

@@ -15,10 +15,10 @@ optionsDataTable = {
       "orderable": false,
       "searchable": false
     },
-    { "data": "manhanvien" },
-    { "data": "tennhanvien" },
-    { "data": "email" },
-    { "data": "hoahongtamtinh" }
+    { "data": "manhanvien", className: "nowrap" },
+    { "data": "tennhanvien", className: "nowrap" },
+    { "data": "email", className: "nowrap" },
+    { "data": "hoahongtamtinh", className: "nowrap" }
   ],
   'order': [1, 'asc'],
   'paging': false,
@@ -29,10 +29,7 @@ optionsDataTable = {
     'orderable': false,
     'className': 'dt-body-center',
     'render': function(data, type, full, meta) {
-      return `<label class="mc-container">&nbsp;
-        <input type="checkbox" class="listCheckbox" name="id[]" value="${$('<div/>').text(data).html()}">
-        <span class="mc-checkmark"></span>
-      </label>`;
+      return `<input type="checkbox" checked hidden name="id[]" value="${$('<div/>').text(data).html()}">`;
 
       return '<input type="checkbox" name="id[]" value="' +
         $('<div/>').text(data).html() + '">';

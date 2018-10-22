@@ -19,6 +19,10 @@
                         <b>Số doanh thu:</b> {{ $doanhthu->maso }}<br>
                         <b>Ngày chốt:</b> {{ formatDateTimeData($doanhthu->ngaychot) }}<br>
                         <b>Tổng tiền:</b> {{ formatMoneyData($doanhthu->sotien) }}<br>
+                        @php
+                        $thangchot = explode('/', $doanhthu->thangchot);
+                        @endphp
+                        <b>Doanh thu tháng – năm:</b> {{ 'Tháng ' . $thangchot[1] .' - Năm ' . $thangchot[0] }}<br>
                         <b>Số lần in:</b> {{ formatMoneyData($doanhthu->solanin) }}
                       </p>
                    </address>
@@ -29,13 +33,16 @@
                    <table class="table table-hover">
                       <thead>
                         <tr>
-                          <td colspan="4" nowrap>Bảng chi tiết chốt doanh thu</td>
+                          <td colspan="4" align="center">
+                            <b>Bảng chi tiết chốt doanh thu</b>
+                          </td>
                         </tr>
                          <tr>
-                            <th nowrap>#</th>
-                            <th nowrap>Mã nhân viên</th>
-                            <th nowrap>Tên nhân viên</th>
-                            <th nowrap class="text-right">Số tiền</th>
+                            <th>#</th>
+                            <th>Mã nhân viên</th>
+                            <th>Tên nhân viên</th>
+                            <th>Số điện thoại</th>
+                            <th class="text-right">Số tiền</th>
                          </tr>
                       </thead>
                       <tbody>
