@@ -8,62 +8,8 @@ $('#data-hopdong').DataTable({
   "language": languageDatatable,
 });
 </script>
-<script type="text/javascript">
-v1 = new ValueCharjs(20, {
-  tooltip : 'Doanh thu tháng 1 là 2,000,000'
-})
-
-v2 = new ValueCharjs(30, {
-  tooltip : 'Doanh thu tháng 2 là 5,000,000'
-})
-data = {
-  labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6'],
-  datasets: 
-  [
-    {
-      label: 'Số hợp đồng',
-      data: [v1, v2, v1, v2, v1, v2],
-      "fill": false,
-      "backgroundColor": "rgba(255, 99, 132, 0.2)",
-      "borderColor": "rgb(255, 99, 132)",
-      "borderWidth": 1
-    },
-  ]
-};
-var ctx = document.getElementById("chart-home");
-var chartHome = new Chart(ctx, {
-  type: 'bar',
-  data: data,
-  options: {
-    scales: {
-      yAxes: [{
-          ticks: {
-          beginAtZero:true
-        }
-      }]
-    },
-    title: {
-      display: true,
-      text: 'Biểu đồ doanh thu'
-    },
-    tooltips: {
-      enabled: true,
-      mode: 'single',
-      callbacks: {
-        title: function (tooltipItems, data) {
-          return data.datasets[0].data[tooltipItems[0].index].metadata.tooltip;
-        },
-        label: function(tooltipItem, data) {
-          var label = data.datasets[tooltipItem.datasetIndex].label;
-          var datasetLabel = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-          return label + ': ' + addCommas(datasetLabel) ;
-        }
-      }
-    }, 
-  }
-});
-
-</script>
+@include('back.report.bieudo_doanhthu')
+@include('back.report.bieudo_hopdong')
 @endsection
 
 @section('content')
@@ -116,18 +62,77 @@ var chartHome = new Chart(ctx, {
           </div>
           <hr>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-9">
+              <div class="d-md-flex align-items-center">
+                <div class="col-md-12">
+                  <h4 class="card-title">Biểu đồ doanh thu</h4>
+                  <h5 class="card-subtitle">Trong tháng</h5>
+                  <div class="form-inline float-sm-right">
+                    <div class="input-group mb-2 mr-sm-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">Thời gian bắt đầu</div>
+                      </div>
+                      @php
+                      $selecteYear = date('Y');
+                      @endphp
+                      <select name="start_year" id="start_year" class="form-control">
+                        @for ($year = 2017; $year <= date('Y'); $year++)
+                          <option value="{{ $year }}" {{ $selecteYear == $year ? 'selected' : '' }}>Năm {{ $year }}</option>
+                        @endfor
+                      </select>
+                    </div>
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                          <div class="input-group-text btn btn-success" id="btn-search-bieudo-doanhthu">
+                          <i class="fas fa-search m-r-10"></i>Lọc
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="wrapper_chart_doanhthu">
+                <canvas id="chart-doanhthu" height="150"></canvas>
+              </div>
+              <hr>
+              <div class="d-md-flex align-items-center">
+                <div class="col-md-12">
+                  <h4 class="card-title">Biểu đồ hợp đồng</h4>
+                  <h5 class="card-subtitle">Theo ngày</h5>
+                  <div class="form-inline float-sm-right">
+                    <div class="input-group mb-2 mr-sm-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">Thời gian bắt đầu</div>
+                      </div>
+                      <input type="date" class="form-control" id="start_date" placeholder="Thời gian bắt đầu" value="{{ getFristDayOfMonth() }}">
+                    </div>
+                     <div class="input-group mb-2 mr-sm-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">Thời gian bắt đầu</div>
+                      </div>
+                      <input type="date" class="form-control" id="end_date" placeholder="Thời gian kết thúc" value="{{ getLastDayOfMonth() }}">
+                    </div>
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                          <div class="input-group-text btn btn-success" id="btn-search-bieudo-hopdong">
+                          <i class="fas fa-search m-r-10"></i>Lọc
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="wrapper_chart_hopdong">
+                <canvas id="chart-hopdong" height="150"></canvas>
+              </div>
+            </div>
+            <div class="col-md-3">
               <div class="d-md-flex align-items-center">
                 <div>
                   <h4 class="card-title">Thông tin cơ bản</h4>
-                  <h5 class="card-subtitle">Trong tháng</h5>
+                  <h5 class="card-subtitle">Dữ liệu</h5>
                 </div>
               </div>
-            </div>
-            <div class="col-md-9">
-              <canvas id="chart-home" height="200"></canvas>
-            </div>
-            <div class="col-md-3">
               <div class="row">
                 <div class="col-6 m-t-5">
                   <a href="{{ route('admin.hopdong.index') }}">

@@ -4,6 +4,9 @@
 Route::get('/', 'HomeController@index')->name('home');
 Auth::routes();
 
+// User register
+Route::get('/register', 'Auth\RegisterController@showRegistrationForm')->name('user.register.index');
+Route::post('/register', 'Auth\RegisterController@create')->name('user.register.create');
 
 // Admin route
 Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'auth'], function() {
@@ -22,18 +25,22 @@ Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'a
   // profile developer TinhNT11
   Route::group(['prefix' => 'thong-tin-ca-nhan'], function() {
     Route::get('/', 'ProfileController@view')->name('user.profile.view');
-    Route::get('/update/{id}', 'ProfileController@update')->name('user.profile.update');
-    Route::post('/action/{id}', 'ProfileController@action')->name('user.profile.action');
+    Route::get('/update', 'ProfileController@update')->name('user.profile.update');
+    Route::post('/action', 'ProfileController@action')->name('user.profile.action');
+    Route::get('/doi-mat-khau', 'ProfileController@repass')->name('user.profile.repass');
+    Route::post('/doi-mat-khau', 'ProfileController@repassaction')->name('user.profile.repassaction');
   });
   
   // Add start ThangTGM 20181009: Quản lý nhân sự
   Route::group(['prefix' => 'nhansu'], function() {
     Route::get('/', 'AdminController@lstQLNS')->name('admin.qlnhansu');
-    // Chờ ku Tính xong sẽ kế thừa
+    Route::post('/delAll', 'AdminController@delAll')->name('admin.qlnhansu.delAll');
     
+    Route::get('/detail/{id}', 'AdminController@viewUserDetail')->name('admin.qlnhansu.detail');
+    Route::post('/detail/action/{id}', 'AdminController@actionUserDetail')->name('admin.detail.action');
     
-    Route::get('/detail', 'AdminController@createNS')->name('admin.qlnhansu.create');
-    Route::get('/create', 'AdminController@createNS')->name('admin.qlnhansu.create');
+    Route::get('/create', 'AdminController@viewCreateUser')->name('admin.qlnhansu.create');
+    Route::post('/create/action', 'AdminController@createAction')->name('admin.qlnhansu.createAction');
     
     Route::get('/trans', 'AdminController@transDetail')->name('admin.trans.detail');
     Route::post('/getTransDetail', 'AdminController@getTransDetail')->name('admin.get.transdetail');
@@ -45,9 +52,12 @@ Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'a
     Route::post('/applytransAction', 'AdminController@applytransAction')->name('admin.applytrans.action');
     Route::post('/applytransSearch', 'AdminController@applytransSearch')->name('admin.applytrans.search');
     
-    Route::get('/commissionHis', 'AdminController@commissionHis')->name('admin.commission.history');
-    Route::post('/commissionSearch', 'AdminController@commissionSearch')->name('admin.commission.search');
-    Route::post('/commissionTree', 'AdminController@commissionTree')->name('admin.commission.tree');
+    Route::get('/commissionHis/{id?}', 'AdminController@commissionHis')->name('admin.commission.history');
+    Route::post('/commissionSearch/{id?}', 'AdminController@commissionSearch')->name('admin.commission.search');
+    Route::post('/commissionTree/{id?}', 'AdminController@commissionTree')->name('admin.commission.tree');
+    
+    Route::get('/contract/{id?}', 'AdminController@lstContract')->name('admin.qlnhansu.contract');
+    Route::post('/contractSearch/{id?}', 'AdminController@contractSearch')->name('admin.contract.search');
   });
   // Add end
   
@@ -74,6 +84,7 @@ Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'a
       Route::post('/update/{id}', 'HopDongApi@update')->name('api.hopdong.update');
       Route::post('/action', 'HopDongApi@actionData')->name('api.hopdong.action');
       Route::post('/removeImage', 'HopDongApi@removeImage')->name('api.hopdong.remove.image');
+      Route::post('/dataBieuDoHopDong', 'HopDongApi@dataBieuDoHopDong')->name('api.hopdong.bieudo');
     });
   });
 
@@ -83,6 +94,7 @@ Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'a
       Route::post('/doanhThuThang', 'DoanhThuApi@doanhThuThang')->name('api.doanhthu.thang');
       Route::post('/data', 'DoanhThuApi@dataChotDoanhThu')->name('api.doanhthu.data');
       Route::post('/action', 'DoanhThuApi@actionData')->name('api.doanhthu.action');
+      Route::post('/dataBieuDoDoanhThu', 'DoanhThuApi@dataBieuDoDoanhThu')->name('api.doanhthu.bieudo');
     });
   });
 

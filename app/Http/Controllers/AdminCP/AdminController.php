@@ -5,7 +5,13 @@ namespace App\Http\Controllers\AdminCP;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DemoRequest;
+use Illuminate\Support\Facades\Input;
+use App\Models\NhanVien;
 use DB;
+use Auth;
+use DateTime;
+use File;
+use Hash;
 use App\Repositories\Repository\HopDongRepository;
 use App\Repositories\Repository\NhanVienRepository;
 use App\Repositories\Repository\HoaHongRepository;
@@ -15,14 +21,14 @@ class AdminController extends Controller
   protected $hopDongRepository = '';
   protected $nhanVienRepository = '';
   protected $hoaHongRepository = '';
-
+  
   public function __construct(HopDongRepository $hopDongRepository, NhanVienRepository $nhanVienRepository, HoaHongRepository $hoaHongRepository)
   {
     $this->hopDongRepository = $hopDongRepository;
     $this->nhanVienRepository = $nhanVienRepository;
     $this->hoaHongRepository = $hoaHongRepository;
   }
-
+  
   public function dashboard()
   {
     $template['title'] = 'Quản lý';
@@ -53,6 +59,7 @@ class AdminController extends Controller
       $queryHopDong->where('nhanvien_id', getNhanVienID());
 
     $data['soluonghopdong'] =  $queryHopDong->count();
+    // dd($this->hopDongRepository->bieuDoHopDong('p'));
 
     return view('back.index', compact('template', 'data'));
   }
@@ -78,8 +85,34 @@ class AdminController extends Controller
       ]
     ];
     
-    $template['users'] = DB::select('select * from nhanvien');
+    $ma_quyen = getQuyenNhanVien();
+    $nv_id = getNhanVienID();
+    if($ma_quyen != 1){
+      //return redirect()->route('admin.dashboard');
+      $template['users'] = DB::select('select *, IF((ADDTIME(created_at, (select concat(giatrithamso,":00:00") from thamso where id = 3)) < NOW()) and trangthai = 0, "Hết hạn", "") as stt, IF(trangthai = 0, "Chưa duyệt", IF(trangthai=1, "Đã duyệt", "Đã nghĩ")) as trangthai from nhanvien where trangthai in (0,1) and parent_id = '.$nv_id);
+    }
+    else {
+      $template['users'] = DB::select('select *, IF((ADDTIME(created_at, (select concat(giatrithamso,":00:00") from thamso where id = 3)) < NOW()) and trangthai = 0, "Hết hạn", "") as stt, IF(trangthai = 0, "Chưa duyệt", IF(trangthai=1, "Đã duyệt", "Đã nghĩ")) as trangthai from nhanvien where trangthai in (0,1)');
+    }
+    
     return view('back.nhanvien.qlynhansu', compact('template'));
+  }
+  
+  public function delAll(Request $request){
+    $arrUser = $request->arrUser;
+    $bSuccesss = true;
+    $szMsg = "Xóa thành công các user đã chọn!!!";
+    
+    foreach($arrUser as $user){
+      $sqlUpdate = "update nhanvien set trangthai = 2, updated_at = NOW() where id = $user";
+      $result = DB::update($sqlUpdate);
+      if(!$result){
+        $bSuccesss = false;
+        $szMsg = "Có lỗi trong quá trình cập nhật CSDL!!!";
+      }
+    }
+    
+    return response()->json(['msg'=> $szMsg, 'success' => $bSuccesss]);
   }
   
   public function transDetail(){
@@ -223,6 +256,11 @@ class AdminController extends Controller
       ]
     ];
     
+    $ma_quyen = getQuyenNhanVien();
+    if($ma_quyen != 1){
+      return redirect()->route('admin.dashboard');
+    }
+    
     // Lấy ra ds các giao dịch trong tháng
     $sql = "select a.ma_gd, a.ngayrut, a.sotien, b.tennhanvien as nguoirut from giaodich a, nhanvien b ";
     $sql .= "WHERE DATE_FORMAT(a.ngayrut, '%Y%m') >= DATE_FORMAT(NOW(), '%Y%m') ";
@@ -271,6 +309,11 @@ class AdminController extends Controller
 		$endTime = date_create($endTime);
 		$endTime = date_format($endTime, 'Ymd');
     
+    $ma_quyen = getQuyenNhanVien();
+    if($ma_quyen != 1){
+      return redirect()->route('admin.dashboard');
+    }
+    
     // Lấy ra ds các giao dịch trong thời gian đã chọn
     $sql = "select a.ma_gd, a.ngayrut, format(a.sotien, '#,##0') as tongtien, b.tennhanvien, '<button>DUYỆT</button>' as chucnang from giaodich a, nhanvien b ";
     $sql .= "WHERE DATE_FORMAT(a.ngayrut, '%Y%m%d') >= '$startTime' ";
@@ -283,38 +326,64 @@ class AdminController extends Controller
     return response()->json(['lstTrans' => $lstTrans]);
   }
   
-  public function commissionHis(){
+  public function commissionHis($user_id = null){
     $template['title'] = 'Quản lý';
     $template['title-breadcrumb'] = '';
-    $template['breadcrumbs'] = [
-      [
-        'name' => 'Quản lý lịch sử hoa hồng',
-        'link' => '',
-        'active' => true
-      ]
-    ];
+    $nv_id = null;
     
-    $nv_id = getNhanVienID();
+    if($user_id != null){
+      $template['breadcrumbs'] = [
+        [
+          'name' => 'Quản lý nhân viên',
+          'link' => route('admin.qlnhansu'),
+          'active' => false
+        ],
+        [
+          'name' => 'Lịch sử hoa hồng',
+          'link' => '',
+          'active' => true
+        ]
+      ];
+      
+      $nv_id = $user_id;
+    }
+    else {
+      $template['breadcrumbs'] = [
+        [
+          'name' => 'Quản lý lịch sử hoa hồng',
+          'link' => '',
+          'active' => true
+        ]
+      ];
+      
+      $nv_id = getNhanVienID();
+    }
+    
     $ma_quyen = getQuyenNhanVien();
     
     // Lấy ra ds các lịch sử hoa hồng trong tháng
-    $sql = "SELECT a.*, b.tennhanvien, d.tenhopdong FROM hoahong a, nhanvien b, hopdong d ";
+    $sql = "SELECT a.*, b.tennhanvien, d.tenhopdong, IF(a.trangthai = 0, 'Chưa duyệt', 'Đã duyệt') as trangthaiduyet FROM hoahong a, nhanvien b, hopdong d ";
     $sql .= "WHERE a.nhanvien_id = b.id ";
     $sql .= "and a.hopdong_id = d.id ";
     $sql .= "and DATE_FORMAT(a.created_at, '%Y%m') >= DATE_FORMAT(NOW(), '%Y%m') ";
     $sql .= "and DATE_FORMAT(a.created_at, '%Y%m') <= DATE_FORMAT(NOW(), '%Y%m') ";
     
-    if($ma_quyen != 1){
+    if($user_id != null){
       $sql .= "and a.nhanvien_id = '$nv_id' ";
+    }
+    else {
+      if($ma_quyen != 1){
+        $sql .= "and a.nhanvien_id = '$nv_id' ";
+      }
     }
     
     $sql .= "order by a.created_at asc";
     $template['lstTrans'] = DB::select($sql);
     
-    return view('back.nhanvien.qlylichsuhoahong', compact('template'));
+    return view('back.nhanvien.qlylichsuhoahong', compact('template', 'nv_id'));
   }
   
-  public function commissionSearch(Request $request){
+  public function commissionSearch(Request $request, $user_id = null){
     $startTime = $request->startTime;
     $endTime = $request->endTime;
     $loaihoahong = $request->loaihoahong;
@@ -325,11 +394,16 @@ class AdminController extends Controller
 		$endTime = date_create($endTime);
 		$endTime = date_format($endTime, 'Ymd');
     
-    $nv_id = getNhanVienID();
+    if($user_id == null){
+      $nv_id = getNhanVienID();
+    }
+    else {
+      $nv_id = $user_id;
+    }
     $ma_quyen = getQuyenNhanVien();
     
     // Lấy ra ds các lịch sử hoa hồng theo mốc thời gian
-    $sql = "SELECT b.tennhanvien, a.loaihoahong, a.hopdong_id, d.tenhopdong, format(a.giatri, '#,##0') as tonghh, a.created_at, a.trangthai, '<button>DUYỆT</button>' as chucnang FROM hoahong a, nhanvien b, hopdong d ";
+    $sql = "SELECT b.tennhanvien, a.loaihoahong, a.hopdong_id, d.tenhopdong, format(a.giatri, '#,##0') as tonghh, a.created_at, a.trangthai, IF(a.trangthai = 0, 'Chưa duyệt', 'Đã duyệt') as trangthaiduyet, '<button>DUYỆT</button>' as chucnang FROM hoahong a, nhanvien b, hopdong d ";
     $sql .= "WHERE DATE_FORMAT(a.created_at, '%Y%m%d') >= '$startTime' ";
     $sql .= "and DATE_FORMAT(a.created_at, '%Y%m%d') <= '$endTime' ";
     $sql .= "and a.nhanvien_id = b.id ";
@@ -339,10 +413,14 @@ class AdminController extends Controller
       $sql .= "and a.loaihoahong = '$loaihoahong' ";
     }
     
-    if($ma_quyen != 1){
+    if($user_id != null){
       $sql .= "and a.nhanvien_id = '$nv_id' ";
     }
-    
+    else {
+      if($ma_quyen != 1){
+        $sql .= "and a.nhanvien_id = '$nv_id' ";
+      }
+    }
     
     $sql .= "order by a.created_at asc";
     $lstTrans = DB::select($sql);
@@ -350,10 +428,15 @@ class AdminController extends Controller
     return response()->json(['lstTrans' => $lstTrans]);
   }
   
-  public function commissionTree(Request $request){
+  public function commissionTree(Request $request, $user_id = null){
     $ma_hd = $request->ma_hd;
     
-    $nv_id = getNhanVienID();
+    if($user_id == null){
+      $nv_id = getNhanVienID();
+    }
+    else {
+      $nv_id = $user_id;
+    }
     $ma_quyen = getQuyenNhanVien();
     
     // Lấy ra ds các lịch sử hoa hồng theo mốc thời gian
@@ -365,5 +448,304 @@ class AdminController extends Controller
     $lstHH = DB::select($sql);
     
     return response()->json(['lstHH' => $lstHH, 'nv_id' => $nv_id]);
+  }
+  
+  public function viewUserDetail($user_id){
+    $template['title'] = 'Quản lý';
+    $template['form-datatable'] = true;
+    $template['title-breadcrumb'] = '';
+    $template['breadcrumbs'] = [
+                [
+                    'name' => 'Danh sách nhân sự',
+                    'link' => route('admin.qlnhansu'),
+                    'active' => false
+                ],
+                [
+                    'name' => 'Chi tiết',
+                    'link' => '',
+                    'active' => true
+                ],
+            ];
+    $ma_quyen = getQuyenNhanVien();
+    if($ma_quyen != 1){
+      return redirect()->route('admin.dashboard');
+    }
+    
+    $profile_update = NhanVien::select('id','tennhanvien','email','sodidong','cmnd','diachi','hinhanh','trangthai')->where('id', $user_id)->get();
+    return view('back.nhanvien.update',compact('template','profile_update'));
+  }
+  
+  public function actionUserDetail(Request $request, $user_id){
+    $this->validate($request,[
+            'txthinhanh'        => 'mimes:jpeg,jpg,png',
+            'txttennhanvien'    => 'required',
+            'txtemail'          => 'required|max:100',
+            'txtphone'          => 'required|min:10|max:11',
+            'txtcmnd'           => 'required|min:9|max:12',
+            'txtaddress'        => 'required|max:100'
+        ],
+        [
+            'txthinhanh.mimes'          => 'Hình ảnh không đúng định dạng',
+            'txttennhanvien.required'   => 'Vui lòng tên nhân viên',
+            'txtemail.required'         => 'Vui lòng nhập email',
+            'txtemail.max'              => 'Email không được vượt quá 100 ký tự',
+            'txtphone.required'         => 'Vui lòng nhập số điện thoại',
+            'txtphone.min'              => 'Số điện thoại từ 10 đến 11 số',
+            'txtphone.max'              => 'Số điện thoại từ 10 đến 11 số',
+            'txtcmnd.required'          => 'Vui lòng nhập số chứng minh nhân dân',
+            'txtcmnd.min'               => 'Số chứng minh nhân dân chỉ từ 9 đến 12 chữ số',
+            'txtcmnd.max'               => 'Số chứng minh nhân dân chỉ từ 9 đến 12 chữ số',
+            'txtaddress.required'       => 'Vui lòng nhập địa chỉ',
+            'txtaddress.required'       => 'Địa chỉ không được vượt quá 100 ký tự',
+        ]);
+    
+    $ma_quyen = getQuyenNhanVien();
+    if($ma_quyen != 1){
+      return redirect()->route('admin.dashboard');
+    }
+    
+    $nhanvien = NhanVien::find($user_id);
+    $nhanvien -> tennhanvien = $request->txttennhanvien;
+    $nhanvien -> email = $request->txtemail;
+    $nhanvien -> sodidong = $request->txtphone;
+    $nhanvien -> cmnd = $request->txtcmnd;
+    $nhanvien -> diachi = $request->txtaddress;
+    $nhanvien -> updated_at = new DateTime();
+    $nhanvien -> trangthai = $request->opTrangthai;
+     
+    $file_hinh = Input::file('txthinhanh'); 
+    
+    if(isset($file_hinh)){
+            $file_hinh = $request->file('txthinhanh')->getClientOriginalName();
+            File::delete('uploads/profile/'.$nhanvien->hinhanh);
+            $nhanvien -> hinhanh = time()."_".$file_hinh;
+            $request->file('txthinhanh')->move(public_path('uploads/profile'),time()."_".$file_hinh);
+    }
+    
+    $nhanvien -> save();
+    session()->flash('success','Bạn đã cập nhật thành công thông tin cá nhân :' . $nhanvien -> tennhanvien);
+    return redirect()->route('admin.qlnhansu');
+  }
+  
+  public function viewCreateUser(){
+    $template['title'] = 'Quản lý';
+    $template['form-datatable'] = true;
+    $template['title-breadcrumb'] = '';
+    $template['breadcrumbs'] = [
+                [
+                    'name' => 'Danh sách nhân sự',
+                    'link' => route('admin.qlnhansu'),
+                    'active' => false
+                ],
+                [
+                    'name' => 'Tạo user',
+                    'link' => '',
+                    'active' => true
+                ],
+            ];
+    $template['magioithieu'] = "";
+    $ma_quyen = getQuyenNhanVien();
+    $nv_id = getNhanVienID();
+    
+    if($ma_quyen != 1){
+      //return redirect()->route('admin.dashboard');
+      $sqlGetParent = "select * from nhanvien where id = '$nv_id'";  
+      $mgt = collect(\DB::select($sqlGetParent))->first()->magioithieu;
+      $template['magioithieu'] = $mgt;
+    }
+    
+    return view('back.nhanvien.dangkyuser',compact('template'));
+  }
+  
+  public function createAction(Request $request){
+    $this->validate($request,[
+            'txthinhanh'        => 'mimes:jpeg,jpg,png',
+            'txttennhanvien'    => 'required',
+            'txtaccount'        => 'required',
+            'txtpass'           => 'required',
+            'txtday'            => 'required',
+            'txtemail'          => 'required|max:100',
+            'txtphone'          => 'required|min:10|max:11',
+            'txtcmnd'           => 'required|min:9|max:12',
+            'txtaddress'        => 'required|max:100'
+        ],
+        [
+            'txthinhanh.mimes'          => 'Hình ảnh không đúng định dạng',
+            'txttennhanvien.required'   => 'Vui lòng nhập tên nhân viên',
+            'txtaccount.required'       => 'Vui lòng nhập account',
+            'txtpass.required'          => 'Vui lòng nhập mật khẩu',
+            'txtday.required'           => 'Vui lòng chọn ngày sinh',
+            'txtemail.required'         => 'Vui lòng nhập email',
+            'txtemail.max'              => 'Email không được vượt quá 100 ký tự',
+            'txtphone.required'         => 'Vui lòng nhập số điện thoại',
+            'txtphone.min'              => 'Số điện thoại từ 10 đến 11 số',
+            'txtphone.max'              => 'Số điện thoại từ 10 đến 11 số',
+            'txtcmnd.required'          => 'Vui lòng nhập số chứng minh nhân dân',
+            'txtcmnd.min'               => 'Số chứng minh nhân dân chỉ từ 9 đến 12 chữ số',
+            'txtcmnd.max'               => 'Số chứng minh nhân dân chỉ từ 9 đến 12 chữ số',
+            'txtaddress.required'       => 'Vui lòng nhập địa chỉ',
+            'txtaddress.required'       => 'Địa chỉ không được vượt quá 100 ký tự',
+        ]);
+    
+    $parent_id = "";
+    $magt = $request->txtmagioithieu;
+    if($magt != ""){
+      $sqlGetParent = "select * from nhanvien where magioithieu = '$magt'";  
+      $parent_id = collect(\DB::select($sqlGetParent))->first()->id;
+    }
+    
+    $tk = $request->txtaccount;
+    $sqlGetTK = "select * from nhanvien where taikhoan = '$tk'";  
+    $numrow = DB::select($sqlGetTK);
+    if(count($numrow) > 0){
+      session()->flash('status','Username đã tồn tại, vui lòng chọn username khác !');
+      return redirect()->route('admin.qlnhansu.create');
+    }
+    
+    $socmnd = $request->txtcmnd;
+    $sqlGetCMND = "select * from nhanvien where cmnd = '$socmnd'";  
+    $numrow2 = DB::select($sqlGetCMND);
+    if(count($numrow2) > 0){
+      session()->flash('status','CMND đã tồn tại, vui lòng chọn CMND khác !');
+      return redirect()->route('admin.qlnhansu.create');
+    }
+    
+    $sotkbank = $request->txtnumberbank;
+    $sqlGetSoTK = "select * from nhanvien where sotaikhoan = '$sotkbank'";  
+    $numrow3 = DB::select($sqlGetSoTK);
+    if(count($numrow3) > 0){
+      session()->flash('status','Tài khoản ngân hàng đã tồn tại, vui lòng chọn tài khoản khác !');
+      return redirect()->route('admin.qlnhansu.create');
+    }
+    
+    $nhanvien = new NhanVien();
+    $nhanvien -> tennhanvien = $request->txttennhanvien;
+    $nhanvien -> email = $request->txtemail;
+    $nhanvien -> sodidong = $request->txtphone;
+    $nhanvien -> cmnd = $request->txtcmnd;
+    $nhanvien -> diachi = $request->txtaddress;
+    $nhanvien -> created_at = new DateTime();
+    $nhanvien -> updated_at = new DateTime();
+    $nhanvien -> trangthai = $request->opTrangthai;
+    $nhanvien -> phanquyen = 0;
+    $nhanvien -> solanchinhsua = 0;
+    $nhanvien -> gioitinh = $request->opGioiTinh;
+    $nhanvien -> taikhoan = $request->txtaccount;
+    $nhanvien -> password = Hash::make($request->txtpass);
+    $nhanvien -> sotaikhoan = $request->txtnumberbank;
+    $nhanvien -> tennganhang = $request->txtnamebank1;
+    $nhanvien -> chinhanh = $request->txtnamebank2;
+    $nhanvien -> namsinh = $request->txtday;
+    $nhanvien -> parent_id = $parent_id;
+    $nhanvien -> magioithieu = uniqid();
+     
+    $file_hinh = Input::file('txthinhanh'); 
+    
+    if(isset($file_hinh)){
+            $file_hinh = $request->file('txthinhanh')->getClientOriginalName();
+            File::delete('uploads/profile/'.$nhanvien->hinhanh);
+            $nhanvien -> hinhanh = time()."_".$file_hinh;
+            $request->file('txthinhanh')->move(public_path('uploads/profile'),time()."_".$file_hinh);
+    }
+    
+    $nhanvien -> save();
+    
+    $nhanvien -> manhanvien = renderMaNV($nhanvien->id);
+    $nhanvien -> save();
+    
+    session()->flash('status','Bạn đã đăng ký thành công !');
+    return redirect()->route('admin.qlnhansu.create');
+  }
+  
+  public function lstContract($user_id){
+    $template['title'] = 'Quản lý';
+    $template['form-datatable'] = true;
+    $template['title-breadcrumb'] = '';
+    $template['breadcrumbs'] = [
+                [
+                    'name' => 'Danh sách nhân sự',
+                    'link' => route('admin.qlnhansu'),
+                    'active' => false
+                ],
+                [
+                    'name' => 'Xem hợp đồng',
+                    'link' => '',
+                    'active' => true
+                ],
+            ];
+            
+    $nv_id = getNhanVienID();
+    $ma_quyen = getQuyenNhanVien();
+    $userViewed = $user_id;
+    // Lấy ra ds các lịch sử hoa hồng trong tháng
+    $sql = "SELECT a.*, b.tennhanvien FROM hopdong a, nhanvien b ";
+    $sql .= "WHERE a.nhanvien_id = b.id ";
+    $sql .= "and DATE_FORMAT(a.created_at, '%Y%m') >= DATE_FORMAT(NOW(), '%Y%m') ";
+    $sql .= "and DATE_FORMAT(a.created_at, '%Y%m') <= DATE_FORMAT(NOW(), '%Y%m') ";
+    $sql .= "and a.deleted = 0 ";
+    
+    if($ma_quyen == 1){
+        $sql .= "and a.nhanvien_id = '$user_id' ";
+    }
+    else {
+      $sql .= "and a.nhanvien_id = '$user_id' ";
+      $sql .= "and b.parent_id = '$nv_id' ";
+    }
+    
+    $sql .= "order by a.created_at desc";
+    $template['sql'] = $sql;
+    $template['lstContract'] = DB::select($sql);
+    
+    return view('back.nhanvien.qlylichsuhopdong', compact('template', 'userViewed'));
+  }
+  
+  public function contractSearch(Request $request, $user_id){
+    $startTime = $request->startTime;
+    $endTime = $request->endTime;
+    
+    $template['title'] = 'Quản lý';
+    $template['form-datatable'] = true;
+    $template['title-breadcrumb'] = '';
+    $template['breadcrumbs'] = [
+                [
+                    'name' => 'Danh sách nhân sự',
+                    'link' => route('admin.qlnhansu'),
+                    'active' => false
+                ],
+                [
+                    'name' => 'Xem hợp đồng',
+                    'link' => '',
+                    'active' => true
+                ],
+            ];
+            
+    $nv_id = getNhanVienID();
+    $ma_quyen = getQuyenNhanVien();
+    $userViewed = $user_id;
+    
+    //Chuyển đổi định dạng ngày tháng
+    $startTime = date_create($startTime);
+		$startTime = date_format($startTime, 'Ymd');
+		$endTime = date_create($endTime);
+		$endTime = date_format($endTime, 'Ymd');
+		
+    // Lấy ra ds các lịch sử hoa hồng theo mốc thời gian
+    $sql = "SELECT a.*, format(a.giatri, '#,##0') as tonghh, b.tennhanvien FROM hopdong a, nhanvien b ";
+    $sql .= "WHERE a.nhanvien_id = b.id ";
+    $sql .= "and DATE_FORMAT(a.created_at, '%Y%m%d') >= '$startTime' ";
+    $sql .= "and DATE_FORMAT(a.created_at, '%Y%m%d') <= '$endTime' ";
+    $sql .= "and a.deleted = 0 ";
+    if($ma_quyen == 1){
+        $sql .= "and a.nhanvien_id = '$user_id' ";
+    }
+    else {
+      $sql .= "and a.nhanvien_id = '$user_id' ";
+      $sql .= "and b.parent_id = '$nv_id' ";
+    }
+    
+    $sql .= "order by a.created_at desc";
+    $lstContract = DB::select($sql);
+    
+    return response()->json(['lstContract' => $lstContract, 'userViewed' => $userViewed, 'sql' => $sql]);
   }
 }

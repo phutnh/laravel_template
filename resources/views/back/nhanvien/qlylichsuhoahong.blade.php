@@ -11,7 +11,7 @@
       headers: {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
               },
-      url: "{{ route('admin.commission.search') }}", 
+      url: "{{ route('admin.commission.search', $nv_id) }}", 
       type: 'POST',
       data: {
            startTime: startTime,
@@ -32,7 +32,7 @@
                         { "data": "tenhopdong" },
                         { "data": "tonghh" },
                         { "data": "created_at" },
-                        { "data": "trangthai" },
+                        { "data": "trangthaiduyet" },
                         { "data": "chucnang" }
                       ]
           });
@@ -49,7 +49,7 @@
           headers: {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
               },
-          url: "{{ route('admin.commission.tree') }}", 
+          url: "{{ route('admin.commission.tree', $nv_id) }}", 
           type: 'POST',
           data: {
                ma_hd: ma_hd
@@ -84,15 +84,16 @@
               
             </div>
           </div>
+          
           <form class="form-inline">
             <div class="form-group">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12">Thời gian bắt đầu </label>
+              <label class="control-label col-md-3 col-sm-12 col-xs-12">Thời gian bắt đầu </label>
               <div class="col-md-4 col-sm-4 col-xs-12">
                 <input type="date" id="startDate" class="form-control"/>
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12">Thời gian kết thúc </label>
+              <label class="control-label col-md-3 col-sm-12 col-xs-12">Thời gian kết thúc </label>
               <div class="col-md-4 col-sm-4 col-xs-12">
                 <input type="date" id="endDate" class="form-control"/>
               </div>
@@ -136,7 +137,7 @@
                   <td>{{ $trans-> tenhopdong }}</td>
                   <td>{{ formatMoneyData($trans-> giatri) }}</td>
                   <td>{{ $trans-> created_at }}</td>
-                  <td>{{ $trans-> trangthai }}</td>
+                  <td>{{ $trans-> trangthaiduyet }}</td>
                   <td><button>Chi tiết</button></td>
                 </tr>
                 @endforeach

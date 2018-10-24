@@ -61,15 +61,45 @@
                         <td>{{ $user->cmnd }}</td> 
                     </tr>
                     <tr>
-                        <td class="profile-bk">Mã giới thiệu</td>
+                        <td class="profile-bk">Link giới thiệu của bạn</td>
                         <td>
+                          @if($user->magioithieu != null && $user->trangthai == 1)
+                          {{route('user.register.create')}}?ref={{$user->magioithieu}}
+                          @else
+                          Không có
+                          @endif
+                        </td> 
+                    </tr>
+                    <tr>
+                        <td class="profile-bk">Người giới thiệu bạn</td>
+                        <td>
+                          @if(isset($nguoigioithieu))
                           <span class="badge badge-primary">{{ $nguoigioithieu->manhanvien }}</span> 
                           <span class="badge badge-light">{{ $nguoigioithieu->tennhanvien }}</span>
+                          @else
+                            Không có
+                          @endif
+                        </td> 
+                    </tr>
+                    <tr>
+                        <td class="profile-bk">Những người bạn đã giới thiệu</td>
+                        <td>
+                          @foreach($quanhe as $data)
+                            @if($data["parent_id"] == $user->id)
+                            <span>{{$data["tennhanvien"]}}</span>
+                            @endif
+                          @endforeach
                         </td> 
                     </tr>
                     <tr>
                         <td class="profile-bk">Giới tính</td>
-                        <td>{{ $user->gioitinh }}</td> 
+                        <td>
+                          @if($user['gioitinh'] == 0)
+                              Nam
+                          @else
+                              Nữ
+                          @endif
+                        </td> 
                     </tr>
                     <tr>
                         <td class="profile-bk">Địa chỉ</td>
@@ -97,7 +127,8 @@
                     </tr>
                   </table>
                   <div class="float-right">
-                      <a href="{{route('user.profile.update',$user->id)}}" class="btn btn-info">Chỉnh sửa</a>
+                      <a href="{{route('user.profile.repass')}}" class="btn btn-success">Thay đổi mật khẩu</a>
+                      <a href="{{route('user.profile.update')}}" class="btn btn-info">Chỉnh sửa thông tin</a>
                   </div>
                 </div>
             </div>

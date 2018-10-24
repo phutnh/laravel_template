@@ -54,6 +54,22 @@ class HopDongApi extends Controller
     return responseFormData('Chỉnh sửa hợp đồng thành công');
   }
 
+  public function dataBieuDoHopDong(Request $request)
+  {
+    $dataBieuDoHopDong = $this->repository->dataBieuDoHopDong($request);
+    $json = [];
+
+    foreach ($dataBieuDoHopDong as $bieudo) {
+      $data = [
+        'nd' => formatDateData($bieudo->nd, 'Y/m/d'),
+        'tonghopdong' => $bieudo->tonghopdong
+      ];
+      array_push($json, $data);
+    }
+
+    return response()->json($json, 200);
+  }
+
   public function removeImage(Request $request)
   {
     $file_name = $request->file_name;

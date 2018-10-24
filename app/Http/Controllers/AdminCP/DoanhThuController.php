@@ -59,8 +59,13 @@ class DoanhThuController extends Controller
         'active' => true
       ],
     ];
+    $prevMonth = (date('m') - 1);
+    $prevMonth = $prevMonth < 10 ? ('0'.$prevMonth) : $prevMonth;
+    $selected = date('Y').'/'.$prevMonth;
+    $doanhthu = $this->repository->query()
+      ->where('thangchot', $selected)->first();
 
-    return view('back.doanhthu.thang', compact('template'));
+    return view('back.doanhthu.thang', compact('template', 'doanhthu'));
   }
 
 

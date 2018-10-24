@@ -43,8 +43,8 @@ class HopDongRepository extends BaseRepository
   public function createHopDong($request)
   {
   	$data = $request->only([
-      'sohopdong', 'tenhopdong', 'giatri', 'tenkhachhang',
-      'sodienthoai', 'email', 'diachi'
+      'sohopdong', 'tenhopdong', 'giatri', 'tenkhachhang', 'masothue',
+      'sodienthoai', 'email', 'diachi', 'ngayhieuluc', 'ngayketthuc'
     ]);
 
     if($request->file('dinhkem'))
@@ -68,8 +68,8 @@ class HopDongRepository extends BaseRepository
   public function updateHopDong($request)
   {
   	$data = $request->only([
-      'tenhopdong', 'giatri', 'tenkhachhang',
-      'sodienthoai', 'email', 'diachi'
+      'tenhopdong', 'giatri', 'tenkhachhang', 'masothue',
+      'sodienthoai', 'email', 'diachi', 'ngayhieuluc', 'ngayketthuc'
     ]);
 
     if($request->file('dinhkem'))
@@ -87,5 +87,31 @@ class HopDongRepository extends BaseRepository
     $data['nhanvien_id'] = getNhanVienID();
     $data['updated_at'] = new DateTime;
     $this->update($data, $request->id);
+  }
+
+  public function dataBieuDoHopDong($request)
+  {
+    $query = $this->query()
+      ->selectRaw('count(hopdong.id) tonghopdong, date(ngayduyet) nd');
+
+    if (!isAdminCP())
+      $query->where('hopdong.nhanvien_id', getNhanVienID());
+    $query->where('trangthai', 'Đã duyệt');
+    $query->where('deleted', 0);
+    $start_date = $request->start_date;
+    $end_date = $request->end_date;
+    if ($start_date && $end_date) {
+      $start_date = $start_date;
+      $end_date = $end_date;
+    }
+    else {
+      $start_date = getFristDayOfMonth($start_date);
+      $end_date = getLastDayOfMonth($end_date);
+    }
+
+    $query->whereDate('ngayduyet', '>=', $start_date);
+    $query->whereDate('ngayduyet', '<=', $end_date);
+    $query->groupBy('nd');
+    return $query->get();
   }
 }

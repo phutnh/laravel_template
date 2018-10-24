@@ -49,12 +49,24 @@ class DoanhThuApi extends Controller
 
   public function doanhThuThang(Request $request)
   {
-    $doanhthu = $this->repository->doanhThuThang($request);
-    return Datatables::of($doanhthu)
-      ->editColumn('sotien', function($model) {
-        return formatMoneyData($model->sotien);
-      })
-      ->make(true);
+    // $doanhthu = $this->repository->doanhThuThang($request);
+    // return Datatables::of($doanhthu)
+    //   ->editColumn('sotien', function($model) {
+    //     return formatMoneyData($model->sotien);
+    //   })
+    //   ->make(true);
+    $thangchot = $request->thangchot;
+    $doanhthu = $this->repository->query()
+      ->where('thangchot', $thangchot)->first();
+    if (!$doanhthu)
+      return '<h4><b>Không tìm thấy dữ liệu chốt doanh thu</b></h4>';
+    if ($request->lanin)
+    {
+      $doanhthu->solanin = $doanhthu->solanin + 1;
+      $doanhthu->save();
+    }
+    
+    return view('back.doanhthu.table', compact('doanhthu'));
   }
 
   public function dataChotDoanhThu(Request $request)
@@ -67,6 +79,11 @@ class DoanhThuApi extends Controller
           return formatMoneyData($model->hoahongtamtinh);
         })
       ->make(true);
+  }
+
+  public function dataBieuDoDoanhThu(Request $request)
+  {
+    return response()->json($this->repository->dataBieuDoDoanhThu($request), 200);
   }
 
   public function actionData(ChotDoanhThuRequest $request)

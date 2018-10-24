@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Validation\Rule;
 
 class LoginController extends Controller
 {
@@ -32,15 +33,20 @@ class LoginController extends Controller
   }
   
   protected function validateLogin($request)
-    {
-      $this->validate($request, 
-      [
-        $this->username() => 'required|string',
-        'password' => 'required|string',
-      ],
-      [
-        $this->username() . '.required' => 'Vui lòng nhập tài khoản',
-        'password.required' => 'Vui lòng nhập mật khẩu'
-      ]);
-    }
+  {
+    $this->validate($request, 
+    [
+      $this->username() => 'required|string',
+      $this->username() => Rule::exists('nhanvien')->where(function ($query) use ($request) {
+          $query->where('taikhoan', $request->taikhoan);
+          $query->where('trangthai', '<>', 2);
+      }),
+      'password' => 'required|string',
+    ],
+    [
+      $this->username() . '.required' => 'Vui lòng nhập tài khoản',
+      $this->username() . '.exists' => 'Tài khoản không hợp lệ',
+      'password.required' => 'Vui lòng nhập mật khẩu'
+    ]);
+  }
 }

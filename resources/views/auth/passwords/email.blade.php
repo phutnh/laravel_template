@@ -67,7 +67,7 @@
 
     $('[data-toggle="tooltip"]').tooltip();
     $(".preloader").fadeOut();
-    $("input").attr('autocomple', 'off');
+    $("input").attr('autocomplete', 'off');
     </script>
 
 </body>

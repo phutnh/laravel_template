@@ -111,6 +111,12 @@ $(".btn-remove-image").click(function() {
               </div>
             </div>
             <div class="form-group row">
+              <label class="col-md-2 control-label col-form-label">Mã số thuế</label>
+              <div class="col-md-10 mc-form-input">
+                <input type="text" class="form-control" name="masothue" id="masothue" placeholder="Mã số thuế" value="{{ $hopdong->masothue }}" {{ $readonly }}>
+              </div>
+            </div>
+            <div class="form-group row">
               <label class="col-md-2 control-label col-form-label">Tên khách hàng</label>
               <div class="col-md-10 mc-form-input">
                 <input type="text" class="form-control" name="tenkhachhang" id="tenkhachhang" placeholder="Tên khách hàng" value="{{ $hopdong->tenkhachhang }}" {{ $readonly }}>
@@ -138,6 +144,18 @@ $(".btn-remove-image").click(function() {
               <label class="col-md-2 control-label col-form-label">Giá trị hợp đồng</label>
               <div class="col-md-10 mc-form-input">
                 <input type="number" class="form-control" name="giatri" id="giatri" placeholder="Giá trị hợp đồng" value="{{ $hopdong->giatri }}" {{ $readonly }}>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-2 control-label col-form-label">Ngày hiệu lực hợp đồng</label>
+              <div class="col-md-10 mc-form-input">
+                <input type="date" class="form-control" name="ngayhieuluc" id="ngayhieuluc" placeholder="Ngày hiệu lực hợp đồng" value="{{ $hopdong->ngayhieuluc }}" {{ $readonly }}>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-2 control-label col-form-label">Ngày kết thúc hợp đồng</label>
+              <div class="col-md-10 mc-form-input">
+                <input type="date" class="form-control" name="ngayketthuc" id="ngayketthuc" placeholder="Ngày kết thúc hợp đồng" value="{{ $hopdong->ngayketthuc }}" {{ $readonly }}>
               </div>
             </div>
             <div class="form-group row">

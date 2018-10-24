@@ -5,12 +5,14 @@ namespace App\Http\Controllers\AdminCP;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\NhanVien;
+use App\Models\ThamSo;
 use App\Http\Requests\DemoRequest;
 use Illuminate\Support\Facades\Input;
 use Auth;
 use DateTime;
 use File;
 use DB;
+use Hash;
 
 class ProfileController extends Controller
 {   
@@ -33,16 +35,25 @@ class ProfileController extends Controller
             ],
         ];
         $user = Auth::user();
-        $magioithieu = ($user->magioithieu); 
-        $nguoigioithieu = NhanVien::select('manhanvien','tennhanvien')->where('id',$magioithieu)->first();
-        return view('back.profile.index',compact('template', 'user','nguoigioithieu'));
+        $id = $user->id;
+        if($user->parent_id != null){
+            $magioithieu = ($user->parent_id);
+            $nguoigioithieu = NhanVien::select('manhanvien','tennhanvien')->where('id',$magioithieu)->first();
+        }
+        // Hàm đệ qui
+        $quanhe = NhanVien::select('id','parent_id','tennhanvien','manhanvien')->get()->toArray();
+        // End
+        return view('back.profile.index',compact('template','user','nguoigioithieu','quanhe'));
     }
 
-    public function update($id){
-        $kiemtra = NhanVien::select('solanchinhsua')->where('id',$id)->first();
-        if($kiemtra->solanchinhsua >= 2){
+    public function update(){
+        $user = Auth::user();
+        $id = $user->id;
+        $solan = ThamSo::select('giatrithamso')->where('id',4)->first();
+        $kiemtra = NhanVien::select('solanchinhsua','phanquyen')->where('id',$id)->first();
+        if($kiemtra->solanchinhsua >= $solan->giatrithamso && $kiemtra->phanquyen != 1){
             echo '<script type="text/javascript">
-                alert("Xin lỗi, bạn chỉ có thể thay đổi thông tin tối đa 2 lần!");
+                alert("Xin lỗi, số lần thay đổi thông tin của bạn đã vượt giới hạn cho phép!");
                 window.location ="';
                 echo route('user.profile.view');
                 echo '"
@@ -63,12 +74,12 @@ class ProfileController extends Controller
                     'active' => true
                 ],
             ];
-            $profile_update = NhanVien::select('id','tennhanvien','email','sodidong','cmnd','diachi','hinhanh')->where('id', $id)->get();
-            return view('back.profile.update',compact('template','profile_update','kiemtra'));
+            $profile_update = NhanVien::select('id','tennhanvien','email','sodidong','cmnd','diachi','hinhanh','solanchinhsua')->where('id', $id)->get();
+            return view('back.profile.update',compact('template','profile_update','kiemtra', 'solan'));
         }
     }
     
-    public function action(Request $request, $id){
+    public function action(Request $request){
         $this->validate($request,[
             'txthinhanh'        => 'mimes:jpeg,jpg,png',
             'txttennhanvien'    => 'required',
@@ -92,6 +103,8 @@ class ProfileController extends Controller
             'txtaddress.required'       => 'Địa chỉ không được vượt quá 100 ký tự',
         ]);
         
+        $user = Auth::user();
+        $id = $user->id;
         $solanhientai = NhanVien::select('solanchinhsua')->where('id', $id)->first();
         $solanupdate  = $solanhientai->solanchinhsua + 1;
         DB::table('nhanvien')->where('id', $id)->update(['solanchinhsua'=> $solanupdate]);
@@ -116,6 +129,63 @@ class ProfileController extends Controller
         $nhanvien -> save();
         session()->flash('success','Bạn đã cập nhật thành công thông tin cá nhân !');
         return redirect()->route('user.profile.view');
+        
+    }
+    
+    public function repass()
+    {
+        $template = $this->template;
+        $template['form-datatable'] = true;
+        $template = $this->template;
+        $template['form-datatable'] = true;
+        $template['breadcrumbs'] = [
+            [
+                'name' => 'Thông tin cá nhân',
+                'link' => route('user.profile.view'),
+                'active' => false
+            ],
+            [
+                'name' => 'Đổi mật khẩu',
+                'link' => '',
+                'active' => true
+            ],
+        ];
+        $user = Auth::user();
+        return view('back.profile.repass',compact('template', 'user'));
+    }
+    
+    public function repassaction(Request $request){
+        $this->validate($request,[
+            'txtpass'		                => 'required|min:6|max:20',
+            'txtrepass'		                => 'required|min:6|max:20',
+    		'txtconfirmrepass'		        => 'same:txtrepass',
+        ],
+        [
+            'txtpass.required'          => 'Vui lòng nhập mật khẩu của bạn',
+            'txtpass.min'               => 'Mật khẩu chỉ từ 6 đến 20 ký tự',
+            'txtpass.max'               => 'Mật khẩu chỉ từ 6 đến 20 ký tự',
+            'txtrepass.required'        => 'Vui lòng nhập mật khẩu mới của bạn',
+            'txtrepass.min'             => 'Mật khẩu chỉ từ 6 đến 20 ký tự',
+            'txtrepass.max'             => 'Mật khẩu chỉ từ 6 đến 20 ký tự',
+            'txtconfirmrepass.same'     => 'Mật khẩu nhập lại không đúng',
+        ]);
+        
+        $user = Auth::user();
+        $id = $user->id;
+        $user = NhanVien::find(Auth::user()->id);
+        if(Hash::check(Input::get('txtpass'), $user['password']) && Input::get('txtrepass') == Input::get('txtconfirmrepass')){
+            $user = NhanVien::find($id);
+            $user->password = Hash::make($request->txtrepass);
+            $user->updated_at = new DateTime();
+            $user -> save();
+            session()->flash('success','Bạn đã thay đổi thành công mật khẩu !');
+            return redirect()->route('user.profile.view');
+        }
+        else{
+            session()->flash('danger','Mật khẩu không đúng !');
+            return redirect()->route('user.profile.repass');
+        }
+        
         
     }
 }

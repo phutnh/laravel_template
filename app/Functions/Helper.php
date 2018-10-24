@@ -119,3 +119,28 @@ if(!function_exists('getLastDayOfMonth'))
 		return date("Y-m-t", strtotime($date));
 	}
 }
+
+if(!function_exists('renderMaNV'))
+{
+	function renderMaNV($user_id)
+	{
+		$ma_nv = "NV";
+		switch (strlen($user_id)){
+			case 1: $ma_nv .= "00000" .  $user_id;
+					break;
+			case 2: $ma_nv .= "0000" .  $user_id;
+					break;
+			case 3: $ma_nv .= "000" .  $user_id;
+					break;
+			case 4: $ma_nv .= "00" .  $user_id;
+					break;
+			case 5: $ma_nv .= "0" .  $user_id;
+					break;
+			case 6: $ma_nv .= $user_id;
+					break;
+			default:
+				break;
+		}
+		return $ma_nv;
+	}
+}

@@ -36,13 +36,13 @@
                     <form class="form-horizontal" id="loginform" method="post" action="{{ route('login') }}">
                         {{ csrf_field() }}
                         @include('partials.validation_errors')
-                        <div class="row p-b-30">
+                        <div class="row">
                             <div class="col-12">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-success text-white" id="basic-addon1"><i class="ti-user"></i></span>
                                     </div>
-                                    <input type="text" name="taikhoan" class="form-control form-control-lg" placeholder="Tài khoản" focus>
+                                    <input type="text" name="taikhoan" class="form-control form-control-lg" placeholder="Tài khoản" autofocus="true">
                                 </div>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
@@ -52,14 +52,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row border-top border-secondary">
+                        <div class="row ">
+                            <div class="col-12">
+                            <button class="btn btn-success float-right btn-block" type="submit">Đăng nhập</button>
+                            </div>
+                        </div>
+                        <div class="row border-top border-secondary p-t-20 bs-popover-bottom">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <div class="p-t-20">
+                                    <div>
                                         <a class="btn btn-info" href="{{ route('password.request') }}">
                                             <i class="fa fa-lock m-r-5"></i> Quên mật khẩu?
                                         </a>
-                                        <button class="btn btn-success float-right" type="submit">Đăng nhập</button>
+                                        <a class="btn btn-info float-right" href="{{ route('user.register.index') }}">
+                                            <i class="fas fa-registered m-r-5"></i> Đăng ký
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -75,6 +82,7 @@
     <script>
     $('[data-toggle="tooltip"]').tooltip();
     $(".preloader").fadeOut();
+    $("input").attr('autocomplete', 'off');
     </script>
 
 </body>

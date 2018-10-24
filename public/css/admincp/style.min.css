@@ -16115,7 +16115,7 @@ td.details-control {
 .document-item {
   position: relative;
   padding-left: 30px;
-  padding-right: 0px;
+  padding-right: 0;
   color: black;
   margin-left: 10px;
   display: inline-block;
@@ -16154,4 +16154,9 @@ td.details-control {
   position: absolute;
   top: -7px;
   left: 22px;
+}
+/* admin logo */
+.logo-ad-w-h{
+  width: 25px;
+  height: 25px;
 }

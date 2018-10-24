@@ -4,7 +4,7 @@
       <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
       <a class="navbar-brand" href="{{ route('admin.dashboard') }}">
         <b class="logo-icon p-l-10">
-          <img src="{{ asset('css/admincp/icons/logo-icon.png') }}" alt="homepage" class="light-logo" />
+          <img src="{{ asset('css/admincp/icons/logo-icon.png') }}" alt="homepage" class="light-logo logo-ad-w-h" />
         </b>
         <span class="logo-text">
           <img src="{{ asset('css/admincp/icons/logo-text.png') }}" alt="homepage" class="light-logo" />
@@ -17,20 +17,21 @@
         <li class="nav-item d-none d-md-block"><a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)" data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24"></i></a></li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="d-none d-md-block">Create New <i class="fa fa-angle-down"></i></span>
+          <span class="d-none d-md-block">Truy cập nhanh <i class="fa fa-angle-down"></i></span>
           <span class="d-block d-md-none"><i class="fa fa-plus"></i></span>   
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
+            <a class="dropdown-item" href="{{ route('admin.hopdong.index') }}">Hợp đồng</a>
+            @if(isAdminCP())
+            <a class="dropdown-item" href="{{ route('admin.doanhthu.thang') }}">Doanh thu</a>
+            @endif
+            <a class="dropdown-item" href="{{ route('admin.commission.history') }}">Lịch sữ nhận hoa hồng</a>
           </div>
         </li>
         <li class="nav-item search-box">
           <a class="nav-link waves-effect waves-dark" href="javascript:void(0)"><i class="ti-search"></i></a>
           <form class="app-search position-absolute">
-            <input type="text" class="form-control" placeholder="Search &amp; enter"> <a class="srh-btn"><i class="ti-close"></i></a>
+            <input type="text" class="form-control" placeholder="Tìm kiếm &amp; enter"> <a class="srh-btn"><i class="ti-close"></i></a>
           </form>
         </li>
       </ul>
@@ -123,6 +124,7 @@
     <nav class="sidebar-nav">
       <ul id="sidebarnav" class="p-t-30">
         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('admin.dashboard') }}" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Trang chủ</span></a></li>
+        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('user.profile.view') }}" aria-expanded="false"><i class="mdi mdi-account-circle"></i><span class="hide-menu">Thông tin cá nhân</span></a></li>
         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('admin.thamso.index') }}" aria-expanded="false"><i class="mdi mdi-flower"></i><span class="hide-menu">Quản lý tham số hoa hồng</span></a></li>
         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('admin.qlnhansu') }}" aria-expanded="false"><i class="mdi mdi-chart-bar"></i><span class="hide-menu">Quản lý nhân viên</span></a></li>
         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('admin.hopdong.index') }}" aria-expanded="false"><i class="mdi mdi-chart-bubble"></i><span class="hide-menu">Quản lý hợp đồng</span></a></li>
@@ -134,7 +136,7 @@
             <li class="sidebar-item"><a href="{{ route('admin.doanhthu.action') }}" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu">Chốt doanh thu</span></a></li>
           </ul>
         </li>
-        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="tables.html" aria-expanded="false"><i class="mdi mdi-border-inside"></i><span class="hide-menu">Lịch sử nhận hoa hồng</span></a></li>
+        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('admin.commission.history') }}" aria-expanded="false"><i class="mdi mdi-border-inside"></i><span class="hide-menu">Lịch sử nhận hoa hồng</span></a></li>
         <li class="sidebar-item">
           <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-receipt"></i><span class="hide-menu">Quản lý rút tiền</span></a>
           <ul aria-expanded="false" class="collapse  first-level">
@@ -143,22 +145,21 @@
           </ul>
         </li>
 
-        <li class="sidebar-item">
-          <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-face"></i><span class="hide-menu">Báo cáo</span></a>
-          <ul aria-expanded="false" class="collapse  first-level">
-            <li class="sidebar-item"><a href="icon-material.html" class="sidebar-link"><i class="mdi mdi-emoticon"></i><span class="hide-menu"> Doanh thu tháng </span></a></li>
-            <li class="sidebar-item"><a href="{{ route('admin.commission.history') }}" class="sidebar-link"><i class="mdi mdi-emoticon-cool"></i><span class="hide-menu"> Lịch sử nhận hoa hồng </span></a></li>
-          </ul>
-        </li>
-        <li class="sidebar-item">
-          <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-face"></i><span class="hide-menu">Thống kê</span></a>
-          <ul aria-expanded="false" class="collapse  first-level">
-            <li class="sidebar-item"><a href="icon-material.html" class="sidebar-link"><i class="mdi mdi-emoticon"></i><span class="hide-menu"> Nhân viên </span></a></li>
-            <li class="sidebar-item"><a href="icon-fontawesome.html" class="sidebar-link"><i class="mdi mdi-emoticon-cool"></i><span class="hide-menu"> Lịch sử rút tiền </span></a></li>
-            <li class="sidebar-item"><a href="icon-fontawesome.html" class="sidebar-link"><i class="mdi mdi-emoticon-cool"></i><span class="hide-menu"> Lịch sử chi tiền </span></a></li>
-          </ul>
-        </li>
-        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('user.profile.view') }}" aria-expanded="false"><i class="mdi mdi-account-circle"></i><span class="hide-menu">Thông tin cá nhân</span></a></li>
+        <!--<li class="sidebar-item">-->
+        <!--  <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-face"></i><span class="hide-menu">Báo cáo</span></a>-->
+        <!--  <ul aria-expanded="false" class="collapse  first-level">-->
+        <!--    <li class="sidebar-item"><a href="icon-material.html" class="sidebar-link"><i class="mdi mdi-emoticon"></i><span class="hide-menu"> Doanh thu tháng </span></a></li>-->
+        <!--    <li class="sidebar-item"><a href="#" class="sidebar-link"><i class="mdi mdi-emoticon-cool"></i><span class="hide-menu"> Lịch sử nhận hoa hồng </span></a></li>-->
+        <!--  </ul>-->
+        <!--</li>-->
+        <!--<li class="sidebar-item">-->
+        <!--  <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-face"></i><span class="hide-menu">Thống kê</span></a>-->
+        <!--  <ul aria-expanded="false" class="collapse  first-level">-->
+        <!--    <li class="sidebar-item"><a href="icon-material.html" class="sidebar-link"><i class="mdi mdi-emoticon"></i><span class="hide-menu"> Nhân viên </span></a></li>-->
+        <!--    <li class="sidebar-item"><a href="icon-fontawesome.html" class="sidebar-link"><i class="mdi mdi-emoticon-cool"></i><span class="hide-menu"> Lịch sử rút tiền </span></a></li>-->
+        <!--    <li class="sidebar-item"><a href="icon-fontawesome.html" class="sidebar-link"><i class="mdi mdi-emoticon-cool"></i><span class="hide-menu"> Lịch sử chi tiền </span></a></li>-->
+        <!--  </ul>-->
+        <!--</li>-->
       </ul>
     </nav>
   </div>

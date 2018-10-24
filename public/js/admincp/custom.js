@@ -254,11 +254,13 @@ ValueCharjs.prototype.toString = function(){
     return this.value;
 }
 
-
-function printDiv(divName){
-    var printContents = document.getElementById(divName).innerHTML;
-    var originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
+function printContent(el){
+  if (!confirm('Bạn có chắc muốn in không ?'))
+    return false;
+  var restorepage = document.body.innerHTML;
+  var printcontent = document.getElementById(el).innerHTML;
+  document.body.innerHTML = printcontent;
+  window.print();
+  document.body.innerHTML = restorepage;
+  return true;
 }

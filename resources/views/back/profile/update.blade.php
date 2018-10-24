@@ -85,7 +85,7 @@
             <h4 class="card-title">Chỉnh sửa thông tin cá nhân</h4>
             <div class="alert alert-warning" role="alert">
               <h4 class="alert-heading">Lưu ý</h4>
-              <span>Bạn chỉ có thể chỉnh sửa một số thông tin cho phép và số lần chỉnh sửa không được vượt quá 2 lần, để biết thêm chi tiết vui lòng liên hệ Admin</span>
+              <span>Bạn đã chỉnh sửa thông tin {{$profile->solanchinhsua}} lần. Bạn chỉ có thể chỉnh sửa một số thông tin cho phép và số lần chỉnh sửa không được vượt quá {{ $solan->giatrithamso }} lần, để biết thêm chi tiết vui lòng liên hệ Admin</span>
             </div>
             <div class="form-group row">
               <label class="col-md-3 control-label col-form-label">Hình ảnh</label>

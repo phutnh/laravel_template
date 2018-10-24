@@ -16,12 +16,15 @@ class HopDongRequest extends FormRequest
     $id = isset($this->id) ? ',sohopdong,' . $this->id : '';
     $rules = [];
     $rules['sohopdong'] = 'required|regex:/^[A-Za-z0-9-_+]+$/|unique:hopdong' . $id;
+    $rules['masothue'] = 'required|regex:/^[A-Za-z0-9-_+]+$/';
     $rules['tenhopdong'] = 'required|min:5';
     $rules['giatri'] = 'required|numeric|min:0';
     $rules['tenkhachhang'] = 'required|min:3';
     $rules['sodienthoai'] = 'required|min:10|max:11';
     $rules['email'] = 'required|email';
     $rules['diachi'] = 'required|min:5';
+    $rules['ngayhieuluc'] = 'required|date';
+    $rules['ngayketthuc'] = 'required|date||after:ngayhieuluc';
     if (isset($this->id)) {
       $rules['dinhkem.*'] = 'nullable|mimetypes:image/jpeg,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf,image/png';
     } else {
@@ -37,6 +40,8 @@ class HopDongRequest extends FormRequest
       'sohopdong.required' => 'Vui lòng nhập số hợp đồng',
       'sohopdong.regex' => 'Số hợp đồng chỉ có thể chứa chữ cái, số và các ký tự - + _.',
       'sohopdong.unique' => 'Số hợp đồng vừa nhập đã tồn tại',
+      'masothue.required' => 'Vui lòng nhập số mã số thuế',
+      'masothue.regex' => 'Số mã số thuế chỉ có thể chứa chữ cái, số và các ký tự - + _.',
       'tenhopdong.required' => 'Vui lòng nhập tên hợp đồng',
       'tenhopdong.min' => 'Vui lòng nhập tên hợp đồng từ 5 ký tự',
       'giatri.required' => 'Vui lòng nhập giá trị của hợp đồng',
@@ -52,7 +57,12 @@ class HopDongRequest extends FormRequest
       'email.email' => 'Email không hợp lệ',
       'diachi.required' => 'Vui lòng nhập địa chỉ',
       'diachi.min' => 'Địa chỉ phải từ 5 ký tự',
-      'dinhkem.*.mimetypes' => 'File đính kèm không hợp lệ'
+      'dinhkem.*.mimetypes' => 'File đính kèm không hợp lệ',
+      'ngayhieuluc.required' => 'Vui lòng nhập ngày có hiệu lực hợp đồng',
+      'ngayhieuluc.date' => 'Vui lòng nhập ngày có hiệu lực hợp đồng',
+      'ngayketthuc.required' => 'Vui lòng nhập ngày kết thúc hợp đồng',
+      'ngayketthuc.date' => 'Vui lòng nhập ngày kết thúc hợp đồng',
+      'ngayketthuc.after' => 'Ngày kết thúc hợp đồng phải sau ngày có hiệu lực'
     ];
   }
 }

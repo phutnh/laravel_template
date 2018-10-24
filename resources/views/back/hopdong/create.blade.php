@@ -27,13 +27,19 @@ validationCallback: function (m, type, instance) {
           <div class="form-group row">
             <label class="col-md-2 control-label col-form-label">Số hợp đồng</label>
             <div class="col-md-10 mc-form-input">
-              <input type="text" class="form-control" name="sohopdong" id="sohopdong" placeholder="Số hợp đồng">
+              <input type="text" class="form-control" name="sohopdong" id="sohopdong" placeholder="Số hợp đồng" autofocus="true">
             </div>
           </div>
           <div class="form-group row">
             <label class="col-md-2 control-label col-form-label">Tên hợp đồng</label>
             <div class="col-md-10 mc-form-input">
               <input type="text" class="form-control" name="tenhopdong" id="tenhopdong" placeholder="Tên hợp đồng">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 control-label col-form-label">Mã số thuế</label>
+            <div class="col-md-10 mc-form-input">
+              <input type="text" class="form-control" name="masothue" id="masothue" placeholder="Mã số thuế">
             </div>
           </div>
           <div class="form-group row">
@@ -64,6 +70,18 @@ validationCallback: function (m, type, instance) {
             <label class="col-md-2 control-label col-form-label">Giá trị hợp đồng</label>
             <div class="col-md-10 mc-form-input">
               <input type="number" min="0" class="form-control" name="giatri" id="giatri" placeholder="Giá trị hợp đồng">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 control-label col-form-label">Ngày hiệu lực hợp đồng</label>
+            <div class="col-md-10 mc-form-input">
+              <input type="date" min="0" class="form-control" name="ngayhieuluc" id="ngayhieuluc" placeholder="Ngày hiệu lực hợp đồng">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 control-label col-form-label">Ngày kết thúc hợp đồng</label>
+            <div class="col-md-10 mc-form-input">
+              <input type="date" min="0" class="form-control" name="ngayketthuc" id="ngayketthuc" placeholder="Ngày kết thúc hợp đồng">
             </div>
           </div>
           <div class="form-group row">
