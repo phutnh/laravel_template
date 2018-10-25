@@ -152,4 +152,23 @@ input::-webkit-inner-spin-button {
   float: left;
 }
 
+.mc-notifications-header {
+  padding: 10px;
+  border-bottom: 1px dotted #ccc;
+  display: block;
+  min-height: 40px;
+}
+
+.mc-notifications-header .left {
+  float: left;
+}
+
+.mc-notifications-header .right {
+  float: right;
+}
+
+.mc-clear-both {
+  clear: both;
+}
+
 /*End phut*/

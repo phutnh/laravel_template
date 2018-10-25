@@ -144,3 +144,11 @@ if(!function_exists('renderMaNV'))
 		return $ma_nv;
 	}
 }
+
+if(!function_exists('getCountNotifications'))
+{
+	function getCountNotifications()
+	{
+		return Auth::user()->unreadNotifications->count();
+	}
+}
