@@ -152,3 +152,24 @@ if(!function_exists('getCountNotifications'))
 		return Auth::user()->unreadNotifications->count();
 	}
 }
+
+if(!function_exists('sendNotificationsUser'))
+{
+	function sendNotificationsUser($receiver, $data)
+	{
+		$options = array(
+      'cluster' => env('PUSHER_APP_CLUSTER'),
+      'encrypted' => true
+    );
+
+    $pusher = new Pusher(
+      env('PUSHER_APP_KEY'),
+      env('PUSHER_APP_SECRET'),
+      env('PUSHER_APP_ID'),
+      $options
+    );
+    
+    $channel = 'notify-messages-action-' . $receiver;
+    $pusher->trigger('Notify', $channel, $data);
+	}
+}

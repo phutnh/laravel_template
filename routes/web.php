@@ -12,8 +12,7 @@ Route::post('/register', 'Auth\RegisterController@create')->name('user.register.
 Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'auth'], function() {
   Route::get('/', 'AdminController@dashboard')->name('admin.dashboard');
 
-  //Route Sample post
-  Route::post('/sample', 'AdminController@postSample')->name('admin.sample.post');
+  Route::post('/markAsReadNotifications', 'AdminController@markAsReadNotifications')->name('admin.markAsReadNotifications');
   
   // Route quản lý phần trăm hoa hồng (tham số cấu hình)
   Route::group(['prefix' => 'tham-so'], function() {

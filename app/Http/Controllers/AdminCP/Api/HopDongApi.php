@@ -13,7 +13,7 @@ use App\Http\Requests\HopDongRequest;
 use App\Notifications\SendContractApprove;
 use App\Notifications\SendContractApproved;
 use App\Models\ThamSo;
-use DB;
+use App\Notifications\SendNotify;
 
 class HopDongApi extends Controller
 {
@@ -171,7 +171,16 @@ class HopDongApi extends Controller
             $hopdong->nguoiduyet_id = getNhanVienID();
             $hopdong->ngayduyet = new DateTime;
             $hopdong->save();
-            // $hopdong->nhanvien->notify(new SendContractApproved($hopdong->id));
+            // Gửi mail và thông báo tới nhân viên
+            $hopdong->nhanvien->notify(new SendContractApproved($hopdong));
+            $data_notify['sender'] = 'Admin';
+            $data_notify['action'] = 'Đã duyệt';
+            $data_notify['title'] = 'Hợp đồng';
+            $data_notify['link'] = route('admin.hopdong.update', $hopdong->id);
+            $data_notify['content'] = str_limit($hopdong->tenhopdong, 30);
+            $data_notify['created_at'] = date('d-m-Y H:i:s');
+            $hopdong->nhanvien->notify(new SendNotify($data_notify));
+            sendNotificationsUser($hopdong->nhanvien->id, $data_notify);
             $message = 'Duyệt hợp đồng thành công';
           }
         }
@@ -197,8 +206,17 @@ class HopDongApi extends Controller
           } else {
             $hopdong->trangthai = 'Gửi duyệt';
             $hopdong->save();
-            // $admin = $this->nhanVienRepository->find(1);
-            // $admin->notify(new SendContractApprove($hopdong->id));
+            // Gửi mail và thông báo đến admin
+            $admin = $this->nhanVienRepository->find(1);
+            $admin->notify(new SendContractApprove($hopdong));
+            $data_notify['sender'] = $hopdong->nhanvien->tennhanvien;
+            $data_notify['action'] = 'Gửi duyệt';
+            $data_notify['title'] = 'Hợp đồng';
+            $data_notify['link'] = route('admin.hopdong.update', $hopdong->id);
+            $data_notify['content'] = str_limit($hopdong->tenhopdong, 30);
+            $data_notify['created_at'] = date('d-m-Y H:i:s');
+            $admin->notify(new SendNotify($data_notify));
+            sendNotificationsUser($admin->id, $data_notify);
             $message = 'Gửi duyệt hợp đồng thành công';
           }
         }

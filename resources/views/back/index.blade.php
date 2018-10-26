@@ -22,7 +22,7 @@ $('#data-hopdong').DataTable({
             <div class="col-md-12">
               <div class="d-md-flex align-items-center">
                 <div>
-                  <h4 class="card-title">Danh sách hợp đồng</h4>
+                  <h4 class="card-title">Danh sách hợp đồng đã duyệt</h4>
                   <h5 class="card-subtitle">Trong tháng {{ date('m-Y') }}</h5>
                 </div>
               </div>

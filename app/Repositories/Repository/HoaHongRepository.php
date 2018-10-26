@@ -20,8 +20,7 @@ class HoaHongRepository extends BaseRepository
   {
   	$hoahong = $this->query()
   	->with(['nhanvien', 'hopdong'])
-  	->where('trangthai', 0)
-  	;
+  	->where('trangthai', 0);
     $start_date = $request->start_date;
     $end_date = $request->end_date;
     if ($start_date && $end_date) {

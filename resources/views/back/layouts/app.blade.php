@@ -57,48 +57,7 @@
     <script src="{{ asset(config('setting.admin.path_js') . 'ajax-form.js') }}"></script>
     <script src="{{ asset(config('setting.admin.path_js') . 'custom.js') }}"></script>
     @yield('scripts')
-    <script type="text/javascript">
-      var notificationsCountElem = $('.notification_count');
-      var notificationsCount     = parseInt(notificationsCountElem.data('count'));
-      var notifications          = $('.notifications');
-
-      // Enable pusher logging - don't include this in production
-      Pusher.logToConsole = true;
-
-      var pusher = new Pusher('{{env('PUSHER_APP_KEY')}}', {
-        encrypted: true,
-        cluster: 'ap1',
-      });
-
-      // Subscribe to the channel we specified in our Laravel Event
-      var channel = pusher.subscribe('Notify');
-
-      // Bind a function to a Event (the full Laravel class)
-      channel.bind('notify-constract-action', function(data) {
-        var existingNotifications = notifications.html();
-        var avatar = Math.floor(Math.random() * (71 - 20 + 1)) + 20;
-        var newNotificationHtml = `
-          <li class="notification active">
-            <div class="media">
-              <img src="https://api.adorable.io/avatars/71/100.png" class="mr-2 img-circle" alt="${data.sender}">
-              <div class="media-body">
-                <strong class="notification-title">
-                  <a href="#">${data.sender}</a> ${data.action} <a href="#">${data.title}</a>
-                </strong>
-                <p class="notification-desc">${data.content}</p>
-                <div class="notification-meta">
-                  <small class="timestamp">${data.created_at}</small>
-                </div>
-              </div>
-            </div>
-          </li>
-        `;
-        notifications.html(newNotificationHtml + existingNotifications);
-        notificationsCount += 1;
-        notificationsCountElem.attr('data-count', notificationsCount);
-        notificationsCountElem.text(notificationsCount);
-      });
-    </script>
+    @include('back.partials.notification')
     @isset($template['form-datatable'])
     <script type="text/javascript">
         $('#table-data-content').DataTable(optionsDataTable);

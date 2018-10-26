@@ -15,8 +15,6 @@ use Hash;
 use App\Repositories\Repository\HopDongRepository;
 use App\Repositories\Repository\NhanVienRepository;
 use App\Repositories\Repository\HoaHongRepository;
-use App\Notifications\SendNotify;
-use Pusher\Pusher;
 
 class AdminController extends Controller
 {
@@ -33,37 +31,6 @@ class AdminController extends Controller
   
   public function dashboard()
   {
-    
-    $data['sender'] = 'Phút';
-    $data['action'] = 'Gửi duyệt';
-    $data['title'] = 'Hợp đồng';
-    $data['content'] = 'Hợp đồng buôn bán nhà';
-    $data['created_at'] = '2019/11/11';
-    $admin = $this->nhanVienRepository->find(1);
-    // foreach (Auth::user()->unreadNotifications as $notification) {
-    //   dd($notification->data['sender']);
-    // }
-    // $admin->notify(new SendNotify($data));
-    $options = array(
-            'cluster' => 'ap1',
-            'encrypted' => true
-        );
-
-        $pusher = new Pusher(
-            env('PUSHER_APP_KEY'),
-            env('PUSHER_APP_SECRET'),
-            env('PUSHER_APP_ID'),
-            $options
-        );
-        $data['sender'] = 'Phút';
-        $data['action'] = 'Gửi duyệt';
-        $data['title'] = 'Hợp đồng';
-        $data['content'] = 'Hợp đồng buôn bán nhà';
-        $data['created_at'] = '2019/11/11';
-        $pusher->trigger('Notify', 'notify-constract-action', $data);
-    // foreach ($admin->unreadNotifications as $notification) {
-    //   // $notification->markAsRead();
-    // }
     $template['title'] = 'Quản lý';
     $template['title-breadcrumb'] = 'Quản lý';
     $template['breadcrumbs'] = [
@@ -97,10 +64,12 @@ class AdminController extends Controller
     return view('back.index', compact('template', 'data'));
   }
 
-  // Sample function post
-  public function postSample(DemoRequest $request)
+  public function markAsReadNotifications(Request $request)
   {
-    # code...
+    foreach (Auth::user()->unreadNotifications as $notification) {
+      $notification->markAsRead();
+    }
+    return responseFormData('Đánh dấu đã đọc thành công');
   }
   
    public function lstQLNS(){

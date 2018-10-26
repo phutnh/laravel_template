@@ -264,3 +264,14 @@ function printContent(el){
   document.body.innerHTML = restorepage;
   return true;
 }
+
+$('#markAsRead').click(function() {
+    var url = $(this).data('href');
+    $.post(url, {
+        '_token': $('meta[name="csrf-token"]').attr('content')
+    }).done(function(data) {
+        $('#div_notifications').html('');
+        $('.notification_count').attr('data-count', 0);
+        $('.notification_count').text('0');
+    });
+})

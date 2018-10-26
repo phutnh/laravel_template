@@ -15,14 +15,12 @@ class Notify
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $sender;
-
     public $action;
-
     public $content;
-
     public $title;
-
     public $created_at;
+    public $receiver;
+    public $link;
 
     public function __construct($data)
     {
@@ -31,10 +29,12 @@ class Notify
         $this->title  = $data['title'];
         $this->content  = $data['content'];
         $this->created_at  = $data['created_at'];
+        $this->receiver = $data['receiver'];
+        $this->link = $data['link'];
     }
 
     public function broadcastOn()
     {
-        return new PrivateChannel('notify-constract-action');
+        return new PrivateChannel('notify-messages-action-' . $this->receiver);
     }
 }

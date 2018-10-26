@@ -51,7 +51,7 @@ optionsDataTable = {
     {
       "data": "action",
       "orderable": false,
-      "searchable": false
+      "searchable": false, className: "nowrap"
     }
   ],
   'columnDefs': [{
@@ -118,7 +118,10 @@ function formatDataDetail(d) {
   if(dinhkem[0] == '')
     links = '';
 
-  return '<b>Email khách hàng:</b> ' + d.email + '<br>' +
+  return '<b>Mã só thuế:</b> ' + d.masothue + '<br>' +
+    '<b>Email khách hàng:</b> ' + d.email + '<br>' +
+    '<b>Ngày hiệu lực hợp đồng:</b> ' + d.ngayhieuluc + '<br>' +
+    '<b>Ngày kết thúc hợp đồng:</b> ' + d.ngayketthuc + '<br>' +
     '<b>Địa chỉ:</b> ' + d.diachi + '<br>' +
     '<b>Đính kèm:</b> <br>' + links;
 }

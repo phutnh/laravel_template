@@ -22,7 +22,7 @@ $("#form-action-detail").ajaxForm({
 
       messages = response.responseJSON.messages;
       $("#ajax-messases").find('.messases-text').html(messages);
-
+      $('#ajax-messases-loading').css({ "display": "none" });
       window.setTimeout(function() {
         $("#ajax-messases").css({
           "display": "none"
@@ -39,6 +39,7 @@ $("#form-action-detail").ajaxForm({
   beforeSubmit: function(arr, $form, options) {
     if (!confirm("Bạn có chắc chắn chọn thao tác này không !"))
       return false;
+    $('#ajax-messases-loading').css({ "display": "block" });
   },
 });
 

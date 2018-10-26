@@ -19,7 +19,7 @@ class NhanVien extends Authenticatable
   ];
 
   protected $hidden = [
-    'password', 'remember_token',
+    'password', 'remember_token', 'phanquyen'
   ];
 
   public function sendPasswordResetNotification($token)

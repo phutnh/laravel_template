@@ -11,11 +11,11 @@ class SendContractApprove extends Notification
 {
   use Queueable;
 
-  protected $hopdong_id;
+  protected $hopdong;
 
-  public function __construct($hopdong_id)
+  public function __construct($hopdong)
   {
-     $this->hopdong_id = $hopdong_id; 
+     $this->hopdong = $hopdong; 
   }
 
   public function via($notifiable)
@@ -27,8 +27,8 @@ class SendContractApprove extends Notification
   {
     return (new MailMessage)->greeting('Xin chào bạn!')
       ->subject('Hợp đồng yêu cầu duyệt')
-      ->line('Một tài khoản đã gửi yêu cầu duyệt hợp đồng')
-      ->action('Truy cập', route('admin.hopdong.update', $this->hopdong_id))
+      ->line($this->hopdong->nhanvien->tennhanvien . ' đã gửi yêu cầu duyệt hợp đồng')
+      ->action('Truy cập', route('admin.hopdong.update', $this->hopdong->id))
       ->line('Vui lòng vào trang quản lý để duyệt hợp đồng này.');
   }
 

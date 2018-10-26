@@ -10,7 +10,10 @@
           <img src="{{ asset('css/admincp/icons/logo-text.png') }}" alt="homepage" class="light-logo" />
         </span>
       </a>
-      <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i class="ti-more"></i></a>
+      <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="notification_count badge badge-pill badge-info" data-count="{{ getCountNotifications() }}">{{ getCountNotifications() }}</span>
+        <i class="ti-more"></i>
+      </a>
     </div>
     <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin5">
       <ul class="navbar-nav float-left mr-auto">
@@ -33,24 +36,24 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-bell font-24"><span class="notification_count" style="font-size: 15px" data-count="{{ getCountNotifications() }}">{{ getCountNotifications() }}</span></i>
           </a>
-          <div class="dropdown-menu dropdown-menu-right mailbox animated bounceInDown" aria-labelledby="2">
+          <div class="dropdown-menu mc-div-notifications dropdown-menu-right mailbox animated bounceInDown" aria-labelledby="2">
             <div class="mc-notifications-header">
-              <div class="left">Thông báo (<span class="notification_count">
+              <div class="left">Thông báo (<span data-count="{{ getCountNotifications() }}" class="notification_count">
                 {{ getCountNotifications() }}
               </span>)</div>
               <div class="right">
-                <a href="#">Đánh dấu đã đọc</a>
+                <a href="javascript:;" data-href="{{ route('admin.markAsReadNotifications') }}" id="markAsRead">Đánh dấu đã đọc</a>
               </div>
             </div>
             <div class="mc-clear-both"></div>
-            <ul class="notifications" style="max-height: 400px; overflow-y: auto;">
+            <ul class="notifications" id="div_notifications" style="max-height: 400px; overflow-y: auto;">
               @foreach (Auth::user()->unreadNotifications as $notification)
               <li class="notification">
                 <div class="media">
                   <img src="https://api.adorable.io/avatars/71/100.png" class="mr-2 img-circle" alt="{{ $notification->data['sender'] }}">
                   <div class="media-body">
                     <strong class="notification-title">
-                      <a href="#">{{ $notification->data['sender'] }}</a> {{ $notification->data['action'] }} <a href="#">{{ $notification->data['title'] }}</a>
+                      <a href="{{ $notification->data['link'] }}">{{ $notification->data['sender'] }}</a> {{ $notification->data['action'] }} <a href="{{ $notification->data['link'] }}">{{ $notification->data['title'] }}</a>
                     </strong>
                     <p class="notification-desc">{{ $notification->data['content'] }}.</p>
                     <div class="notification-meta">

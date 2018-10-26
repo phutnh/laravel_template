@@ -152,6 +152,9 @@ input::-webkit-inner-spin-button {
   float: left;
 }
 
+.mc-div-notifications {
+  padding-bottom: 0;
+}
 .mc-notifications-header {
   padding: 10px;
   border-bottom: 1px dotted #ccc;
