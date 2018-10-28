@@ -1,6 +1,3 @@
-@php
-  header("Content-type: text/javascript; charset: UTF-8");
-@endphp
 <script type="text/javascript">
   var notificationsCountElem = $('.notification_count');
   var notificationsCount     = parseInt(notificationsCountElem.data('count'));
@@ -16,7 +13,7 @@
 
   // Subscribe to the channel we specified in our Laravel Event
   var channel = pusher.subscribe('Notify');
-  var user_id_channel = '{{ Auth::id() }}';
+  var user_id_channel = '{{ getUserID() }}';
   // Bind a function to a Event (the full Laravel class)
   channel.bind('notify-messages-action-' + user_id_channel , function(data) {
     var existingNotifications = notifications.html();
