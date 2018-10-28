@@ -71,6 +71,22 @@ class AdminController extends Controller
     }
     return responseFormData('Đánh dấu đã đọc thành công');
   }
+
+  public function getNotifications()
+  {
+    $template['title'] = 'Quản lý thông báo';
+    $template['title-breadcrumb'] = 'Quản lý thông báo';
+    $template['breadcrumbs'] = [
+      [
+        'name' => 'Quản lý thông báo',
+        'link' => '',
+        'active' => true
+      ],
+    ];
+
+    $notifications = Auth::user()->notifications;
+    return view('back.nhanvien.notifications', compact('template', 'notifications'));
+  }
   
    public function lstQLNS(){
     //$lstNS = DB::table('nhanvien')->get();

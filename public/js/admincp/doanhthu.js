@@ -21,6 +21,7 @@ optionsDataTable = {
     { "data": "hoahongtamtinh", className: "nowrap" }
   ],
   'order': [1, 'asc'],
+  "scrollX": true,
   'paging': false,
   "searching": false,
   'columnDefs': [{

@@ -22,7 +22,7 @@
     var existingNotifications = notifications.html();
     var avatar = Math.floor(Math.random() * (71 - 20 + 1)) + 20;
     var newNotificationHtml = `
-      <li class="notification active">
+      <li class="notification active mc-border-notification">
         <div class="media">
           <img src="https://api.adorable.io/avatars/71/100.png" class="mr-2 img-circle" alt="${data.sender}">
           <div class="media-body">

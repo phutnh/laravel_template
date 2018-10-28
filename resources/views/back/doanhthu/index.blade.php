@@ -24,7 +24,8 @@ optionsDataTable = {
     { "data": "thangchot", "name": "thangchot", className: "nowrap" },
     { "data": "ngaychot", "name": "ngaychot", className: "nowrap" },
     { "data": "action", className: "nowrap" },
-  ]
+  ],
+  "scrollX": true
 };
 table = $('#table-data-content').DataTable(optionsDataTable);
 $("#btn-search").click(function() {
@@ -68,19 +69,17 @@ $("#btn-search").click(function() {
             </div>
           </div>
           <hr style="clear: both;">
-          <div class="table-responsive">
-            <table id="table-data-content" class="table table-striped table-bordered">
-              <thead>
-                <tr>
-                  <th>Người chốt</th>
-                  <th>Số tiền</th>
-                  <th>Tháng chốt</th>
-                  <th width="150">Thời gian chốt</th>
-                  <th width="70">Chi tiết</th>
-                </tr>
-              </thead>
-            </table>
-          </div>
+          <table id="table-data-content" class="table table-striped table-bordered" style="width: 100%;">
+            <thead>
+              <tr>
+                <th>Người chốt</th>
+                <th>Số tiền</th>
+                <th>Tháng chốt</th>
+                <th width="150">Thời gian chốt</th>
+                <th width="70">Chi tiết</th>
+              </tr>
+            </thead>
+          </table>
         </div>
       </div>
     </div>

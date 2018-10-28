@@ -70,6 +70,7 @@ optionsDataTable = {
     }
   }],
   'order': [2, 'asc'],
+  "scrollX": true
 };
 
 table = $('#table-data-content').DataTable(optionsDataTable);

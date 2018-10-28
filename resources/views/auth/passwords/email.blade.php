@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="auth-wrapper d-flex no-block justify-content-center align-items-center bg-dark">
-            <div class="auth-box bg-dark border-top border-secondary">
+            <div class="auth-box bg-dark" style="margin: 0;">
                 <div id="loginform">
                     <div class="text-center p-t-20 p-b-20">
                         <span class="db"><img src="{{ asset('css/admincp/icons/logo-icon.png') }}" alt="logo" /></span>

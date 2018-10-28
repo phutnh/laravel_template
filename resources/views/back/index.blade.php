@@ -6,6 +6,7 @@
 <script type="text/javascript">
 $('#data-hopdong').DataTable({
   "language": languageDatatable,
+  "scrollX": true
 });
 </script>
 @include('back.report.bieudo_doanhthu')
@@ -26,38 +27,36 @@ $('#data-hopdong').DataTable({
                   <h5 class="card-subtitle">Trong tháng {{ date('m-Y') }}</h5>
                 </div>
               </div>
-              <div class="table-responsive">
-                 <table id="data-hopdong" class="table table-striped table-bordered">
-                    <thead>
-                     <tr>
-                        <th>Số hợp đồng</th>
-                        <th>Tên hợp đồng</th>
-                        <th>Khách hàng</th>
-                        <th>Giá trị</th>
-                        <th>Trạng thái</th>
-                        <th>Email</th>
-                        <th width="auto">Công cụ</th>
-                     </tr>
-                    </thead>
-                    <tbody>
-                      @foreach ($data['danhsachhopdong'] as $hopdong)
-                      <tr>
-                        <th>{{ $hopdong->sohopdong }}</th>
-                        <th>{{ $hopdong->tenhopdong }}</th>
-                        <th>{{ $hopdong->khachhang }}</th>
-                        <th>{{ formatMoneyData($hopdong->giatri) }}</th>
-                        <th>{{ $hopdong->trangthai }}</th>
-                        <th>{{ $hopdong->email }}</th>
-                        <th width="auto">
-                          <a class="btn btn-info btn-sm" href="{{ route('admin.hopdong.update', $hopdong->id) }}" target="_blank">
-                            <i class="mdi mdi-link"></i>Chi tiết
-                          </a>
-                        </th>
-                       </tr>
-                      @endforeach
-                    </tbody>
-                 </table>
-              </div>
+             <table id="data-hopdong" class="table table-striped table-bordered" style="width: 100%">
+                <thead>
+                 <tr>
+                    <th class="nowrap">Số hợp đồng</th>
+                    <th class="nowrap">Tên hợp đồng</th>
+                    <th class="nowrap">Khách hàng</th>
+                    <th class="nowrap">Giá trị</th>
+                    <th class="nowrap">Trạng thái</th>
+                    <th class="nowrap">Email</th>
+                    <th width="auto" class="nowrap">Công cụ</th>
+                 </tr>
+                </thead>
+                <tbody>
+                  @foreach ($data['danhsachhopdong'] as $hopdong)
+                  <tr>
+                    <td class="nowrap">{{ $hopdong->sohopdong }}</td>
+                    <td class="nowrap">{{ $hopdong->tenhopdong }}</td>
+                    <td class="nowrap">{{ $hopdong->khachhang }}</td>
+                    <td class="nowrap">{{ formatMoneyData($hopdong->giatri) }}</td>
+                    <td class="nowrap">{{ $hopdong->trangthai }}</td>
+                    <td class="nowrap">{{ $hopdong->email }}</td>
+                    <td width="auto" class="nowrap">
+                      <a class="btn btn-info btn-sm" href="{{ route('admin.hopdong.update', $hopdong->id) }}" target="_blank">
+                        <i class="mdi mdi-link"></i>Chi tiết
+                      </a>
+                    </td>
+                   </tr>
+                  @endforeach
+                </tbody>
+             </table>
             </div>
           </div>
           <hr>

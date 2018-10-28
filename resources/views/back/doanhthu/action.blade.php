@@ -26,20 +26,18 @@ apiData = "{{ route('api.doanhthu.data') }}";
                 <button class="btn btn-info btn-sm" name="action" value="approve" type="submit"><i class="mdi mdi-marker-check"></i> Chốt doanh thu</button>
               </div>
             </div>
-            <div class="table-responsive">
-              <table id="table-data-content" class="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th width="15">
-                    </th>
-                    <th>Mã nhân viên</th>
-                    <th>Tên nhân viên</th>
-                    <th>Email</th>
-                    <th>Số tiền</th>
-                  </tr>
-                </thead>
-              </table>
-            </div>
+            <table id="table-data-content" class="table table-striped table-bordered" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th width="15">
+                  </th>
+                  <th>Mã nhân viên</th>
+                  <th>Tên nhân viên</th>
+                  <th>Email</th>
+                  <th>Số tiền</th>
+                </tr>
+              </thead>
+            </table>
           </div>
         </form>
       </div>

@@ -76,29 +76,27 @@ apiData = '{{ route('api.hopdong.all') }}';
               </div>
             </div>
               <hr style="clear: both;">
-              <div class="table-responsive">
-                 <table id="table-data-content" class="table table-striped table-bordered">
-                    <thead>
-                       <tr>
-                          <th width="auto"></th>
-                          <th width="15">
-                             <!--<input name="select_all" value="all" id="ckb-select-all" type="checkbox" />-->
-                             <label class="mc-container">&nbsp;
-                             <input type="checkbox" value="all" id="ckb-select-all">
-                             <span class="mc-checkmark"></span>
-                             </label>
-                          </th>
-                          <th>Số hợp đồng</th>
-                          <th>Tên hợp đồng</th>
-                          <th>Khách hàng</th>
-                          <th>Giá trị</th>
-                          <th>Trạng thái</th>
-                          <th>Email</th>
-                          <th width="auto">Công cụ</th>
-                       </tr>
-                    </thead>
-                 </table>
-              </div>
+               <table id="table-data-content" class="table table-striped table-bordered" style="width: 100%;">
+                  <thead>
+                     <tr>
+                        <th width="auto"></th>
+                        <th width="15">
+                           <!--<input name="select_all" value="all" id="ckb-select-all" type="checkbox" />-->
+                           <label class="mc-container">&nbsp;
+                           <input type="checkbox" value="all" id="ckb-select-all">
+                           <span class="mc-checkmark"></span>
+                           </label>
+                        </th>
+                        <th>Số hợp đồng</th>
+                        <th>Tên hợp đồng</th>
+                        <th>Khách hàng</th>
+                        <th>Giá trị</th>
+                        <th>Trạng thái</th>
+                        <th>Email</th>
+                        <th width="auto">Công cụ</th>
+                     </tr>
+                  </thead>
+               </table>
            </form>
         </div>
      </div>

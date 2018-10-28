@@ -11,7 +11,7 @@
         </span>
       </a>
       <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="notification_count badge badge-pill badge-info" data-count="{{ getCountNotifications() }}">{{ getCountNotifications() }}</span>
+        <span class="notification_count badge badge-pill badge-info" data-count="{{ getCountNotifications() }}">{{ getCountNotifications() > 0 ? getCountNotifications() : '' }}</span>
         <i class="ti-more"></i>
       </a>
     </div>
@@ -34,7 +34,7 @@
       </ul>
       <ul class="navbar-nav float-right">
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-bell font-24"><span class="notification_count" style="font-size: 15px" data-count="{{ getCountNotifications() }}">{{ getCountNotifications() }}</span></i>
+          <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-bell font-24"><span class="notification_count" style="font-size: 15px" data-count="{{ getCountNotifications() }}">{{ getCountNotifications() > 0 ? getCountNotifications() : '' }}</span></i>
           </a>
           <div class="dropdown-menu mc-div-notifications dropdown-menu-right mailbox animated bounceInDown" aria-labelledby="2">
             <div class="mc-notifications-header">
@@ -47,8 +47,8 @@
             </div>
             <div class="mc-clear-both"></div>
             <ul class="notifications" id="div_notifications" style="max-height: 400px; overflow-y: auto;">
-              @foreach (Auth::user()->unreadNotifications as $notification)
-              <li class="notification">
+              @foreach (Auth::user()->unreadNotifications()->take(5)->get() as $notification)
+              <li class="notification mc-border-notification">
                 <div class="media">
                   <img src="https://api.adorable.io/avatars/71/100.png" class="mr-2 img-circle" alt="{{ $notification->data['sender'] }}">
                   <div class="media-body">
@@ -64,17 +64,27 @@
               </li>
               @endforeach
             </ul>
+            <div class="mc-notifications-header">
+              <div class="right">
+                <a href="{{ route('admin.qlnhansu.notifications') }}">Xem tất cả</a>
+              </div>
+            </div>
+            <div class="mc-clear-both"></div>
           </div>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="{{ asset('css/admincp/icons/account.png') }}" alt="user" class="rounded-circle" width="31"></a>
+            @php
+            $avatar = Auth::user()->hinhanh;
+            $avatar = $avatar ? $avatar : 'account.png';
+            @endphp
+            <img src="{{ asset('uploads/profile/' . $avatar) }}" alt="user" class="rounded-circle" width="30" height="30"></a>
           <div class="dropdown-menu dropdown-menu-right user-dd animated">
-            <a class="dropdown-item" href="javascript:void(0)"><i class="ti-user m-r-5 m-l-5"></i> My Profile</a>
-            <a class="dropdown-item" href="javascript:void(0)"><i class="ti-wallet m-r-5 m-l-5"></i> My Balance</a>
-            <a class="dropdown-item" href="javascript:void(0)"><i class="ti-email m-r-5 m-l-5"></i> Inbox</a>
+            <a class="dropdown-item" href="{{ route('user.profile.view') }}"><i class="ti-user m-r-5 m-l-5"></i> Thông tin cá nhân</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="javascript:void(0)"><i class="ti-settings m-r-5 m-l-5"></i> Account Setting</a>
+            <a class="dropdown-item" href="{{ route('admin.commission.history') }}"><i class="ti-email m-r-5 m-l-5"></i> Lịch sử nhận hoa hồng</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{ route('admin.qlnhansu.notifications') }}"><i class="ti-email m-r-5 m-l-5"></i> Thông báo</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="javascript:void(0)" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
               <i class="fa fa-power-off m-r-5 m-l-5"></i> Đăng xuất
@@ -83,7 +93,7 @@
               {{ csrf_field() }}
             </form>
             <div class="dropdown-divider"></div>
-            <div class="p-l-30 p-10"><a href="{{ route('user.profile.view') }}" class="btn btn-sm btn-success btn-rounded">View Profile</a></div>
+            <div class="p-l-30 p-10"><a href="{{ route('user.profile.view') }}" class="btn btn-sm btn-success btn-rounded">Xem thông tin cá nhân</a></div>
           </div>
         </li>
       </ul>

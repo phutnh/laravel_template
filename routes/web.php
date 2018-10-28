@@ -33,6 +33,7 @@ Route::group(['prefix' => 'cpanel', 'namespace' => 'AdminCP', 'middleware' => 'a
   // Add start ThangTGM 20181009: Quản lý nhân sự
   Route::group(['prefix' => 'nhansu'], function() {
     Route::get('/', 'AdminController@lstQLNS')->name('admin.qlnhansu');
+    Route::get('/notifications', 'AdminController@getNotifications')->name('admin.qlnhansu.notifications');
     Route::post('/delAll', 'AdminController@delAll')->name('admin.qlnhansu.delAll');
     
     Route::get('/detail/{id}', 'AdminController@viewUserDetail')->name('admin.qlnhansu.detail');
